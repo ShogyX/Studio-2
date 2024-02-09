@@ -20,4 +20,3 @@ def search_special_int_caps(text):
         results["capitalized_letters"] = capitalized_letters
     
     return results
-    
