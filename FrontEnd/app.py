@@ -1,50 +1,40 @@
 from flask import Flask, render_template, request, jsonify
-import re
+#imports functions from the local AnalysisFunctions script
+from AnalysisFunctions import search_special_int_caps
 
+#Initialize the app with Flask
 app = Flask(__name__)
 
+#Tell the App where out base HTML is located and run it.
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
+#This function accepts the password and calls all our analysis function to evaluate the password.
+def analyze_password(password):
+
+    #not integrated yet
+    special_char = search_special_int_caps(password)
+
+    #This return will be passed to the Analyze() function and fruther to the client side.
+    return {'Length': len(password), 'First Character': password[0] if password else ''}
+
+
+#Recieve the password password from the HTML form and pass it back to the Analyze_Password function before returning the results.
 @app.route('/analyze', methods=['POST'])
 def analyze():
     if request.method == 'POST':
-        input_text = request.form['input_text']
-        analysis_result = analyze_text(input_text)
+        password = request.form['input_text']
+        analysis_result = analyze_password(password)
         #Returns a json doc with information to the client side
         return jsonify({'result': analysis_result})
 
-def search_special_int_caps(text):
-    results = {
-        "special_characters": 0,
-        "integers": 0,
-        "capitalized_letters": 0
-    }
-    
-    special_characters = re.findall(r'[^a-zA-Z0-9\s]', text)
-    integers = re.findall(r'\d', text)
-    capitalized_letters = re.findall(r'[A-Z]', text)
-    
-    if special_characters:
-        results["special_characters"] = special_characters
-    if integers:
-        results["integers"] = integers
-    if capitalized_letters:
-        results["capitalized_letters"] = capitalized_letters
-    
-    return results
 
 
 
-def analyze_text(text):
-    #not integrated yet
-    special_char = search_special_int_caps(text)
-
-
-
-    return {'Length': len(text), 'First Character': text[0] if text else ''}
-
+#Actually run the app, run with host=0.0.0.0 if you want the app to be visible on local network. 
+#(this is needed if you want to port forward and allow external access to the site), default port it 5000
 if __name__ == '__main__':
     app.run(debug=True)
-
+    #app.run(debug=True. host="0.0.0.0")
