@@ -1,6 +1,6 @@
 import os  # Import the os module for file handling
 import re  # Import the re module for regular expressions
-
+import sys # Import the sys module for handling command line arguments
 def sanitize_passwords(input_file):
     """
     Sanitize the passwords in the input file by escaping special characters.
