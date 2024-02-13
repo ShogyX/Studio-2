@@ -17,11 +17,11 @@ h1 {
     color: #333;
 }
 
-textarea {
+input {
     width: 95%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    resize: none; /* Prevent textarea from being resized */
+    resize: none; /* Prevent input area from being resized */
 }
