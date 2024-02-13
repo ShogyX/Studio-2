@@ -14,11 +14,19 @@ def index():
 #This function accepts the password and calls all our analysis function to evaluate the password.
 def analyze_password(password):
 
-    #not integrated yet
-    special_char = search_special_int_caps(password)
+    #Simple String Manipulation/reading to provide som filler output
+    extra_variables = {
+        'Length': len(password),
+        'First Character': password[0] if password else '',
+        'Second Character': password[1] if len(password) > 1 else '',
+        'Last Character': password[-1] if password else ''
+        }
+    
+    #This unpacks all dicts and combines them into one big dict to be passed to the client side.
+    analysis_results = {**extra_variables, **search_special_int_caps(password)}
 
     #This return will be passed to the Analyze() function and fruther to the client side.
-    return {'Length': len(password), 'First Character': password[0] if password else ''}
+    return analysis_results
 
 
 #Recieve the password password from the HTML form and pass it back to the Analyze_Password function before returning the results.
