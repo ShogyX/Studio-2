@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 #imports functions from the local AnalysisFunctions script
-from AnalysisFunctions import search_special_int_caps
+from AnalysisFunctions import search_special_int_caps, RunFullAnalysis
 
 #Initialize the app with Flask
 app = Flask(__name__)
@@ -44,6 +44,9 @@ def index():
 
 def analyze_password(password):
 
+    #Simple Blind Bruteforce Calculator:
+
+
     #Simple String Manipulation/reading to provide som filler output
     extra_variables = {
         'Length': len(password),
@@ -52,7 +55,7 @@ def analyze_password(password):
         }
     
     #This unpacks all dicts and combines them into one big dict to be passed to the client side.
-    analysis_results = {**extra_variables, **search_special_int_caps(password)}
+    analysis_results = {**extra_variables, **RunFullAnalysis(password)}
 
     #This return will be passed to the Analyze() function and fruther to the client side.
     return analysis_results
