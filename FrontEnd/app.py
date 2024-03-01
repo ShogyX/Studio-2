@@ -5,8 +5,6 @@ from AnalysisFunctions import search_special_int_caps
 #Initialize the app with Flask
 app = Flask(__name__)
 
-
-
 "This part does not yet work"
 # @app.route('/update_meter', methods=['POST'])
 # def update_meter(input_string):

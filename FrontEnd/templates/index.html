@@ -59,13 +59,15 @@
                         var value = data.result[key];
                         var listItem = document.createElement('p');
                         listItem.textContent = key + ': ' + value;
+                        // Apply CSS class to the dynamically generated paragraps in order to allow or styling in css
+                        listItem.classList.add('analysis-item');
                         analysisResult.appendChild(listItem);
                     }
                 }
             })
-            .catch(error => {
-                console.error('Error:', error); 
-            });
+    .catch(error => {
+        console.error('Error:', error); 
+    });
         });
     </script>
 </body>

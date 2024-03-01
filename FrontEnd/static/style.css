@@ -1,24 +1,25 @@
-/* Recommend styling after most of the logic has been built */
-
 body {
     font-family: Arial, sans-serif;
+    background-color: #f3f3f3; /* Darker background color */
+    background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/tactile_noise.png'); /* link to external pattern */
+    background-repeat: repeat; /* Repeat the pattern */
 }
 
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 20px auto; /* Added margin to center the container vertically */
     padding: 20px;
-    background-color: #fff;
+    background-color: rgba(59, 59, 59, 0.9); /* Semi-transparent background */
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
 }
 
 h1 {
-    color: #333;
+    color: #fff; /* White text color */
 }
 
 input {
-    width: 95%;
+    width: 97%; /* Changed width to 100% for better responsiveness */
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
@@ -27,7 +28,7 @@ input {
 }
 
 .meter-container {
-    width: 800px;
+    width: 100%; /* Changed width to 100% for better responsiveness */
     margin: 0 auto;
 }
 
@@ -43,7 +44,7 @@ input {
 .meter-fill {
     width: calc(var(--meter-value) * 1%);
     height: 100%;
-    background-color: #4CAF50;
+    background-color: #505050;
     transition: width 0.5s ease-in-out;
     display: flex;
     justify-content: center;
@@ -52,3 +53,8 @@ input {
     font-weight: bold;
 }
 
+.analysis-item {
+    /* Add your styles here */
+    font-weight: bold;
+    color: white;
+}

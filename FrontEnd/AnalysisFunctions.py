@@ -1,7 +1,9 @@
 import re
+import wordsegment
 #The standard way of structuring information to be passed to the front end is to place it into a dict and import the function into the app.py file 
 #And call it inside the analyze_password(password) function. This call then be unpacked and combined with the final dict.
 
+#Returns the amount of Sepcial Characters, Integers And Capital Letters
 def search_special_int_caps(string):
     # Dict where the count of each occurence will be stored
     counts = {}
@@ -19,3 +21,16 @@ def search_special_int_caps(string):
     result = {k: v for k, v in counts.items() if v > 0}
     #returns the resulting dict. will be empty if nothing is found.
     return result
+
+print(search_special_int_caps("HElloWorld12345!!"))
+
+def detect_words(input_string):
+
+    cleaned = re.sub(r'[^a-zA-Z]', '', input_string) #remove any non letter characters
+    wordsegment.load()
+    segmented_words = wordsegment.segment(cleaned)
+    return segmented_words
+
+
+def detect_placement_and_count(input_string):
+    pass
