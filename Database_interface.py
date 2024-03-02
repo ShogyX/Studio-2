@@ -76,7 +76,7 @@ sql_select = "SELECT * FROM Test_Table"
 
 
 
-#Execute_command(conn, sql_insert)
+Execute_command(conn, sql_insert)
 
 for row in Fetch_data(conn, sql_select):
     print(row)
