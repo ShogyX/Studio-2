@@ -1,6 +1,9 @@
 import sqlite3
 from sqlite3 import Error
 
+#This document is currently made to be an interface with the main_db, to allow us to create and modify tables and data.
+#Currently no production tables has been made.
+
 
 def create_connection(db_file):
     """ create a database connection to a SQLite database """
@@ -35,16 +38,26 @@ def Fetch_data(conn, select_statement):
     rows = cur.fetchall()
     return rows
 
+#This is the proposed strucutre for the table with all the common words.
+sql_create_table_word_table = """ 
+CREATE TABLE IF NOT EXISTS common_words_table (
+id integer PRIMARY KEY,
+word text NOT NULL,
+language text NOT NULL,
+region text); 
+"""
+
+#This is the proposed strucutre for table with common passwords. 
+#The language and region are included but not neccesasry to allow for the option of sorting common passwords in different languages if that is a route we wish to tread.
+sql_create_table_password_table = """ 
+CREATE TABLE IF NOT EXISTS common_password_table (
+id integer PRIMARY KEY,
+password text NOT NULL,
+language text,
+region text); 
+"""
 
 sql_delete = 'DELETE FROM Test_Table WHERE id=?'
-
-sql_create_table = """ 
-CREATE TABLE IF NOT EXISTS Test_Table (
-id integer PRIMARY KEY,
-name text NOT NULL,
-begin_date text,
-end_date text); 
-"""
 
 sql_insert = """ 
 INSERT INTO Test_Table (id, name, begin_date, end_date)
