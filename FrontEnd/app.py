@@ -77,5 +77,5 @@ def analyze():
 #Actually run the app, run with host=0.0.0.0 if you want the app to be visible on local network. 
 #(this is needed if you want to port forward and allow external access to the site), default port it 5000
 if __name__ == '__main__':
-    app.run(debug=True)
-    #app.run(debug=True. host="0.0.0.0")
+    #app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
