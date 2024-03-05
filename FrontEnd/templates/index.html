@@ -10,66 +10,49 @@
     <div class="container">
         <h1>Super PSM 3000</h1>
         <input id="input_text" rows="1" cols="1" type="password"></input> <!-- Text Area where password will be written -->
-        
+        <button id="Analyze">ANALYZE</button>
         <div class="meter-container"> <!-- Strength meter will display here -->
             <div class="meter">
                 <div class="meter-fill" style="--meter-value: {{ meter_value }};">
-                    {{ meter_value }}%
+                    
                 </div>
             </div>
         </div>
-        <div id="analysis_result"></div> <!-- This is where the weppage will write info about the password. -->
+        <div id="analysis_result"></div> <!-- This is where the webpage will write info about the password. -->
     </div>
     
     <script>
-        // Function to update the meter value dynamically
-        function updateMeter() {
-            $.ajax({
-                url: '/update_meter',
-                success: function(response) {
-                    $('#dynamic-meter').val(response.meter_value);
-                },
-                error: function(xhr) {
-                    console.log("Error:", xhr.responseText);
-                }
-            });
-        }
+        var analyzeButton = document.getElementById('Analyze');
+        var inputText = document.getElementById('input_text');
+        var analysisResult = document.getElementById('analysis_result');
 
-        // Update the meter value every 0.1 second
-        setInterval(updateMeter, 100);
-    </script>
-    <script>
-        var inputText = document.getElementById('input_text'); // defines the input field as a variable
-        var analysisResult = document.getElementById('analysis_result'); // defines the (div id="analysis_result") as a variable will be used later to write results into.
+        analyzeButton.addEventListener('click', function() {
+            var text = String(inputText.value); // Ensure the input is treated as a string
 
-        inputText.addEventListener('input', function() {
-            var text = inputText.value;
-            fetch('/analyze', {   // This will post the password to the python logic in app.py
+            fetch('/analyze', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: 'input_text=' + encodeURIComponent(text)
             })  
-            .then(response => response.json()) // expects the response from the backend to be in json format
+            .then(response => response.json())
             .then(data => {
-                analysisResult.innerHTML = '';  // Clear previous results
-                for (var key in data.result) {  // Will Iterate the json response and create paragraphs below the text field with this information.
+                analysisResult.innerHTML = '';
+                for (var key in data.result) {
                     if (data.result.hasOwnProperty(key)) {
                         var value = data.result[key];
                         var listItem = document.createElement('p');
                         listItem.textContent = key + ': ' + value;
-                        // Apply CSS class to the dynamically generated paragraps in order to allow or styling in css
                         listItem.classList.add('analysis-item');
                         analysisResult.appendChild(listItem);
                     }
                 }
             })
-    .catch(error => {
-        console.error('Error:', error); 
-    });
+            .catch(error => {
+                console.error('Error:', error); 
+            });
         });
     </script>
 </body>
-
 </html>

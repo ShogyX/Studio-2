@@ -6,55 +6,43 @@ body {
 }
 
 .container {
-    max-width: 800px;
-    margin: 20px auto; /* Added margin to center the container vertically */
+    
+    max-width: 1200px; /* Adjust the max-width as needed */
+    margin: 50px auto; /* Center the container vertically and horizontally */
     padding: 20px;
-    background-color: rgba(59, 59, 59, 0.9); /* Semi-transparent background */
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
+    background-color: #555; /* Darker grey container background color */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a subtle shadow to the container */
 }
 
 h1 {
-    color: #fff; /* White text color */
+    text-align: center; /* Center the heading */
+    color: #fff;
 }
 
-input {
-    width: 97%; /* Changed width to 100% for better responsiveness */
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input[type="password"] {
+    width: calc(100% - 42px); /* Make the input field fill the container width */
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: none; /* Prevent input area from being resized */
-}
-
-.meter-container {
-    width: 100%; /* Changed width to 100% for better responsiveness */
-    margin: 0 auto;
-}
-
-.meter {
-    width: 100%;
-    height: 30px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    border: 1px solid #777; /* Grey border */
     border-radius: 5px;
-    overflow: hidden;
+    background-color: #444; /* Darker grey background color */
+    color: white; /* Text color */
 }
 
-.meter-fill {
-    width: calc(var(--meter-value) * 1%);
-    height: 100%;
-    background-color: #505050;
-    transition: width 0.5s ease-in-out;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
+button {
+    width: calc(100% - 20px); /* Make the button fill the container width */
+    padding: 10px;
+    border: 1px solid #777; /* Grey border */
+    border-radius: 5px;
+    background-color: #4CAF50; /* Green button color */
+    color: white; /* Text color */
+    cursor: pointer;
 }
 
-.analysis-item {
-    /* Add your styles here */
-    font-weight: bold;
-    color: white;
-}

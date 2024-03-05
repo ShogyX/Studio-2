@@ -42,37 +42,17 @@ def index():
 
 #This function accepts the password and calls all our analysis function to evaluate the password.
 
-def analyze_password(password):
-
-    #Simple Blind Bruteforce Calculator:
-
-
-    #Simple String Manipulation/reading to provide som filler output
-    extra_variables = {
-        'Length': len(password),
-        'First Character': password[0] if password else '',
-        'Last Character': password[-1] if password else ''
-        }
-    
-    #This unpacks all dicts and combines them into one big dict to be passed to the client side.
-    analysis_results = {**extra_variables, **RunFullAnalysis(password)}
-
-    #This return will be passed to the Analyze() function and fruther to the client side.
-    return analysis_results
-
-
-
 #Recieve the password password from the HTML form and pass it back to the Analyze_Password function before returning the results.
 @app.route('/analyze', methods=['POST'])
 def analyze():
     if request.method == 'POST':
         password = request.form['input_text']
-        analysis_result = analyze_password(password)
+        try:
+            analysis_result = RunFullAnalysis(password)
+        except:
+            analysis_result = {}
         #Returns a json doc with information to the client side
         return jsonify({'result': analysis_result})
-
-
-
 
 #Actually run the app, run with host=0.0.0.0 if you want the app to be visible on local network. 
 #(this is needed if you want to port forward and allow external access to the site), default port it 5000
