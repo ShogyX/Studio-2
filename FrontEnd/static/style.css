@@ -1,48 +1,173 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f3f3f3; /* Darker background color */
-    background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/tactile_noise.png'); /* link to external pattern */
-    background-repeat: repeat; /* Repeat the pattern */
+    background-color: #111;
+    color: #eee;
 }
 
 .container {
-    
-    max-width: 1200px; /* Adjust the max-width as needed */
-    margin: 50px auto; /* Center the container vertically and horizontally */
+    position: absolute;
+    top: 8%;
+    left: 28%;
+    width: 500px;
+    background-color: #222;
     padding: 20px;
-    background-color: #555; /* Darker grey container background color */
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a subtle shadow to the container */
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: left; /* Center child elements horizontally */
+    height: auto; /* Fixed height for the container */
+    
 }
 
+@media only screen and (max-width: 300px) {
+    .container {
+        width: 70%; /* Make the container full width */
+        padding: 0px; /* Add padding to the container */
+    }
+    /* Other styles for smaller screens */
+}
 h1 {
-    text-align: center; /* Center the heading */
-    color: #fff;
+    text-align: center;
+    color: #eee;
 }
 
 .input-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin-bottom: 20px;
 }
 
 input[type="password"] {
-    width: calc(100% - 42px); /* Make the input field fill the container width */
+    flex: 1;
     padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #777; /* Grey border */
+    border: 1px solid #333;
     border-radius: 5px;
-    background-color: #444; /* Darker grey background color */
-    color: white; /* Text color */
+    font-size: 16px;
+    background-color: #333;
+    color: #eee;
+    margin-right: 10px; /* Adjusted margin-right for more space */
 }
 
 button {
-    width: calc(100% - 20px); /* Make the button fill the container width */
-    padding: 10px;
-    border: 1px solid #777; /* Grey border */
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
     border-radius: 5px;
-    background-color: #4CAF50; /* Green button color */
-    color: white; /* Text color */
     cursor: pointer;
+    font-size: 16px;
 }
 
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Apply css properties to h1 element */
+h1 {
+    text-align: center;
+}
+
+/* Create a container using CSS properties */
+.meter-container {
+    position: absolute; /* Position relative to the parent container */
+    top: 0%; /* Adjust top position as needed */
+    left: calc(100% + 20px); /* Position it to the right of the main container with some spacing */
+    max-width: 900px;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+}
+.progress-circle {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .progress-circle__svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .progress-circle__background {
+    fill: none;
+    stroke: #ddd; /* Background color */
+    stroke-width: 8;
+  }
+  
+  .progress-circle__progress {
+    fill: none;
+    stroke-width: 8;
+    stroke-dasharray: 283;
+    transition: stroke-dashoffset 0.5s ease; /* Animation duration */
+  }
+  
+  .progress-circle__text {
+    font-size: 20px;
+    fill: #333; /* Text color */
+  }
+
+
+/* Style the dropdown button */
+.dropdown-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+/* Style the dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    padding: 10px;
+    background-color: #555;
+}
+
+/* Show the dropdown content when the button is clicked */
+.dropdown-content.show {
+    display: block;
+}
+
+
+.category-item {
+    list-style: none; /* Remove default list-style */
+    margin-bottom: 20px; /* Add some bottom margin between items */
+}
+
+.category-heading {
+    color: #fff; /* White text color */
+    font-size: 1.2em; /* Adjust heading font size */
+}
+
+.category-info {
+    color: #ccc; /* Light gray text color */
+}
+
+.ticker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+    float: right; /* Align to the right */
+    position: relative; /* Add relative positioning */
+}
+.dropdown-btn {
+    /* Ensure button content aligns correctly */
+    overflow: hidden;
+}
+
+/* Add specific colors for different statuses */
+.ticker.green {
+    background-color: rgb(33, 153, 33);
+}
+
+.ticker.orange {
+    background-color: orange;
+}
+
+.ticker.red {
+    background-color: rgb(131, 19, 19);
+}

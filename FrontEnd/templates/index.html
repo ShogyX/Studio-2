@@ -3,26 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Strength Meter 3000</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- This grabs the CSS stylesheet from the Static folder -->
+    <title>Password Strength Meter 3000</title>
 </head>
+
+
 <body>
     <div class="container">
         <h1>Super PSM 3000</h1>
-        <input id="input_text" rows="1" cols="1" type="password"></input> <!-- Text Area where password will be written -->
-        <button id="Analyze">ANALYZE</button>
-        <div class="meter-container"> <!-- Strength meter will display here -->
-            <div class="meter">
-                <div class="meter-fill" style="--meter-value: {{ meter_value }};">
-                    
-                </div>
-            </div>
+        <div class="input-container">
+            <input id="input_text" type="password" placeholder="Enter your password">
+            <button id="analyze_button">Analyze</button>
         </div>
         <div id="analysis_result"></div> <!-- This is where the webpage will write info about the password. -->
-    </div>
     
+        <div class="meter-container">
+            <div class="progress-circle">
+                <svg class="progress-circle__svg" viewBox="0 0 100 100">
+                  <circle class="progress-circle__background" cx="50" cy="50" r="45"></circle>
+                  <circle class="progress-circle__progress" cx="50" cy="50" r="45"></circle>
+                  <text class="progress-circle__text" x="50" y="50" text-anchor="middle" alignment-baseline="middle"></text>
+                </svg>
+              </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        var analyzeButton = document.getElementById('Analyze');
+        function setProgress(percent) {
+        const circle = document.querySelector('.progress-circle__progress');
+        const text = document.querySelector('.progress-circle__text');
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (percent / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+        // Set color based on progress
+        const color = getColor(percent);
+        circle.style.stroke = color;
+        text.textContent = percent + '%';
+        text.style.fill = color;
+        }
+
+        function getColor(percent) {
+        // Define color intervals
+        const colorIntervals = [
+            { start: 0, end: 25, color: '#FF4500' }, // Red
+            { start: 25, end: 50, color: '#FFA500' }, // Orange
+            { start: 50, end: 75, color: '#FFFF00' }, // Yellow
+            { start: 75, end: 100, color: '#32CD32' } // Green
+        ];
+
+        // Find the color interval for the given percentage
+        for (const interval of colorIntervals) {
+            if (percent >= interval.start && percent <= interval.end) {
+            return interval.color;
+            }
+        }
+        }
+        
+        var analyzeButton = document.getElementById('analyze_button');
         var inputText = document.getElementById('input_text');
         var analysisResult = document.getElementById('analysis_result');
 
@@ -38,16 +77,109 @@
             })  
             .then(response => response.json())
             .then(data => {
+                // Handle JSON response
+                var analysisData = data.result;
+
+                // Clear previous analysis results
                 analysisResult.innerHTML = '';
-                for (var key in data.result) {
-                    if (data.result.hasOwnProperty(key)) {
-                        var value = data.result[key];
-                        var listItem = document.createElement('p');
-                        listItem.textContent = key + ': ' + value;
-                        listItem.classList.add('analysis-item');
-                        analysisResult.appendChild(listItem);
-                    }
+
+                // Define categories with pre-prepared information
+                var categories = {};
+
+                if (analysisData.Capital_Letter_amount !== undefined && analysisData.Capital_Letter_amount !== 0) {
+                    categories['Capital_Letter_Grouping'] = {
+                        label: 'Capital Letter Grouping',
+                        info: 'Amount: ' + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",  
+                        strength: parseInt(analysisData.Capital_Letter_Grouping)
+                    };
                 }
+
+                if (analysisData['Detected Words'] !== undefined && analysisData['Detected Words'] !== 0) {
+                    categories['Detected Words'] = {
+                        label: 'Detected Words',
+                        info: 'Words: ' + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",  
+                        strength: 10 // Assuming it's always strong
+                    };
+                }
+
+                if (analysisData.Integer_amount !== undefined && analysisData.Integer_amount !== 0) {
+                    categories['Integer_Grouping'] = {
+                        label: 'Integer Grouping',
+                        info: 'Amount: ' + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                        strength: parseInt(analysisData.Integer_Grouping)
+                    };
+                }
+
+                if (analysisData.Special_Character_amount !== undefined && analysisData.Special_Character_amount !== 0) {
+                    categories['Special_Character_Grouping'] = {
+                        label: 'Special Character Grouping',
+                        info: 'Amount: ' + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                        strength: parseInt(analysisData.Special_Character_Grouping)
+                    };
+                }
+
+                // Iterate over categories and display each section
+                setProgress(30);
+                
+
+                for (var key in categories) {
+    if (categories.hasOwnProperty(key)) {
+        var category = categories[key];
+        
+        // Create a list item for the category
+        var listItem = document.createElement('li');
+        listItem.classList.add('category-item');
+        
+        // Create a button for toggling the content
+        var button = document.createElement('button');
+        button.classList.add('dropdown-btn');
+        button.textContent = category.label;
+        
+        // Create a ticker element
+        var ticker = document.createElement('span');
+        ticker.classList.add('ticker');
+        ticker.style.backgroundColor = getStatusColor(category.strength);
+        
+        // Append ticker to button
+        button.appendChild(ticker);
+        
+        // Create a div for the dropdown content
+        var dropdownContent = document.createElement('div');
+        dropdownContent.classList.add('dropdown-content');
+        
+        // Create heading and paragraph elements for the content
+        var heading = document.createElement('h3');
+        heading.textContent = category.label;
+        var paragraph = document.createElement('p');
+        paragraph.textContent = category.info;
+        
+        // Append heading and paragraph to dropdown content
+        dropdownContent.appendChild(heading);
+        dropdownContent.appendChild(paragraph);
+        
+        // Append button and dropdown content to list item
+        listItem.appendChild(button);
+        listItem.appendChild(dropdownContent);
+        
+        // Append list item to analysis result
+        analysisResult.appendChild(listItem);
+        
+        // Add event listener to button for toggling content
+        button.addEventListener('click', function() {
+            this.nextElementSibling.classList.toggle('show');
+        });
+    }
+}
+
+function getStatusColor(strength) {
+    if (strength >= 8) {
+        return "green"; // Good
+    } else if (strength >= 5) {
+        return "orange"; // Moderate
+    } else {
+        return "red"; // Bad
+    }
+}
             })
             .catch(error => {
                 console.error('Error:', error); 

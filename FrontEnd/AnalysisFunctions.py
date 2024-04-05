@@ -1,11 +1,7 @@
 import re
 import wordsegment
-import json
 #The standard way of structuring information to be passed to the front end is to place it into a dict and import the function into the app.py file 
 #And call it inside the analyze_password(password) function. This call then be unpacked and combined with the final dict.
-
-test = "ggg"
-
 #Returns the amount of Sepcial Characters, Integers And Capital Letters
 def search_special_int_caps(input_string):
     # Dict where the count of each occurence will be stored
@@ -115,20 +111,20 @@ def detect_special_character_grouping(input_string):
             return {"Special_Character_Grouping":True} 
     except IndexError:
         return {"Special_Character_Grouping":False}
-#This one will return the index of all integers. Sved for potential future use, but not active at the moment
-# def detect_integer_grouping_depreciated(input_string):
-#     integer_indices = []
-#     for i, char in enumerate(input_string):
-#         if char.isdigit():
-#             integer_indices.append(i)
-#     return integer_indices
-
+    
 def combine_and_jsonify(*dicts):
-    combined_dict = {}
-    for d in dicts:
-        combined_dict.update(d)
-    #return json.dumps(combined_dict, indent=4)
-    return combined_dict
+    try:
+        
+        for d in dicts:
+            combined_dict.update(d)
+        #return json.dumps(combined_dict, indent=4)
+        return combined_dict
+    except:
+        combined_dict = {}
+        for d in dicts:
+            combined_dict.update(d)
+        #return json.dumps(combined_dict, indent=4)
+        return combined_dict
 
 def RunFullAnalysis (string):
     if string == None:
@@ -141,7 +137,8 @@ def RunFullAnalysis (string):
     s_w = detect_words(string)
     ssic = search_special_int_caps(string)
     #This is intended to be json, but currently it is just one combined dict that is passed. 
-    json_output = combine_and_jsonify(s_w, spc_g, ssic, cl_g, i_s, i_g, f_l)
-    return json_output
+    combined_dict = {}
+    for d in [s_w, spc_g, ssic, cl_g, i_s, i_g, f_l]:
+        combined_dict.update(d)
+    return combined_dict
 
-RunFullAnalysis(test)
