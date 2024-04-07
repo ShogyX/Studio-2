@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">¨
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- This grabs the CSS stylesheet from the Static folder -->
@@ -46,8 +46,8 @@
             </div>
         </div>
     </div>
-
     <div class="feedback-container">
+
     </div>
 
 
@@ -85,11 +85,15 @@
             specialDiv.style.color = specialRegex.test(password) ? 'green' : 'red';
         }
 
-        function handleKeyPress(event) {
-            if (event.key === "Enter") {
+        document.getElementById("input_text").addEventListener("keyup", function(event) {
+            // Check if the Enter key (key code 13) is pressed
+            if (event.keyCode === 13) {
+                // Prevent the default action of the Enter key (form submission)
+                event.preventDefault();
+                // Call the analyzePassword() function
                 analyzePassword();
             }
-        }
+        });
 
         function setProgress(percent) {
         const circle = document.querySelector('.progress-circle__progress');
