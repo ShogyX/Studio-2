@@ -158,8 +158,9 @@
         function updateFeedbackContainer(data) {
             var feedbackContainer = document.querySelector(".feedback-container");
 
-            // Clear previous content
+            // Clear previous content and reset classes
             feedbackContainer.innerHTML = "";
+            feedbackContainer.classList.remove("weak", "moderate", "strong");
 
             // Display password strength
             var strengthParagraph = document.createElement("p");
