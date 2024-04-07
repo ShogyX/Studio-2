@@ -34,10 +34,23 @@ h1 {
 
 .input-container {
     display: flex;
+    position: relative;
     margin-bottom: 20px;
 }
 
 input[type="password"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #333;
+    color: #eee;
+    margin-right: 10px; /* Adjusted margin-right for more space */
+}
+
+
+input[type="text"] {
     flex: 1;
     padding: 10px;
     border: 1px solid #333;
@@ -108,66 +121,70 @@ h1 {
   }
 
 
-/* Style the dropdown button */
-.dropdown-btn {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    padding: 10px;
+.password-input-container {
+    display: flex;
+    position: relative;
+}
+
+#input_text {
+    padding-right: 185px; /* Adjust padding to accommodate the button */
+    border-radius: 5px; /* Ensure consistent styling */
+    border: 0px solid #ccc; /* Ensure consistent styling */
+    height: 36px; /* Ensure consistent height */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 20px;
+    top: 51%;
+    transform: translateY(-50%);
     cursor: pointer;
-    width: 100%;
-    text-align: left;
+    color: #555; /* Adjust the color as needed */
+    z-index: 1; /* Ensure the button is above the input field */
 }
 
-/* Style the dropdown content (hidden by default) */
-.dropdown-content {
-    display: none;
-    padding: 10px;
-    background-color: #555;
+.password-toggle-icon i {
+    font-size: 18px; /* Adjust the font size as needed */
 }
 
-/* Show the dropdown content when the button is clicked */
-.dropdown-content.show {
+#analysis_result {
+    display: flex;
+    justify-content: left;
+}
+
+#analysis_result > div {
+    margin: 0 6px;
+}
+
+#analysis_result > div > span {
     display: block;
 }
 
 
-.category-item {
-    list-style: none; /* Remove default list-style */
-    margin-bottom: 20px; /* Add some bottom margin between items */
+.feedback-container {
+    position: absolute;
+    top: 38%;
+    left: 28%;
+    width: 500px;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: left; /* Center child elements horizontally */
+    height: auto; /* Fixed height for the container */
 }
 
-.category-heading {
-    color: #fff; /* White text color */
-    font-size: 1.2em; /* Adjust heading font size */
+.feedback-container.weak {
+    border: 2px solid red;
 }
 
-.category-info {
-    color: #ccc; /* Light gray text color */
+.feedback-container.moderate {
+    border: 2px solid orange;
 }
 
-.ticker {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 5px;
-    float: right; /* Align to the right */
-    position: relative; /* Add relative positioning */
-}
-.dropdown-btn {
-    /* Ensure button content aligns correctly */
-    overflow: hidden;
-}
-
-/* Add specific colors for different statuses */
-.ticker.green {
-    background-color: rgb(33, 153, 33);
-}
-
-.ticker.orange {
-    background-color: orange;
-}
-
-.ticker.red {
-    background-color: rgb(131, 19, 19);
+.feedback-container.strong {
+    border: 2px solid green;
 }

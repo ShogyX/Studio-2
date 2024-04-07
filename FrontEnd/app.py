@@ -16,12 +16,8 @@ def index():
 def analyze():
     if request.method == 'POST':
         password = request.form['input_text']
-        try:
-            analysis_result = RunFullAnalysis(password)
-        except:
-            analysis_result = {}
-        #Returns a json doc with information to the client side
-        return jsonify({'result': analysis_result})
+        analysis_result = RunFullAnalysis(password)
+        return analysis_result
 
 
 #Actually run the app, run with host=0.0.0.0 if you want the app to be visible on local network. 
