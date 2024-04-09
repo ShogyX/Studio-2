@@ -95,6 +95,16 @@
             }
         });
 
+        function cleanInput(input) {
+            // Regular expression to match any escaped characters
+            var escapedRegex = /\\[0-9A-Fa-f]{1,2}/g;
+        
+            // Replace escaped characters with an empty string
+            return input.replace(escapedRegex, '');
+        }
+
+
+
         function setProgress(percent) {
         const circle = document.querySelector('.progress-circle__progress');
         const text = document.querySelector('.progress-circle__text');
