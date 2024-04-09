@@ -1,37 +1,98 @@
-import json
+from faker import Faker
 
-def generate_fallacies_json(fallacies_found, **fallacies_info):
-    # Create a dictionary to hold the fallacies information
-    fallacies_dict = {"Fallacies_found": fallacies_found}
+fake = Faker()
 
-    # Add individual fallacies information to the dictionary
-    for i in range(1, fallacies_found + 1):
-        fallacy_name = fallacies_info.get(f"fallacy_{i}_name", "")
-        fallacy_info = fallacies_info.get(f"fallacy_{i}_info", "")
-        fallacy_mitigation = fallacies_info.get(f"fallacy_{i}_mitigation", "")
-        fallacy_degree = fallacies_info.get(f"fallacy_{i}_degree", "")
-        fallacies_dict[f"fallacy_{i}"] = {
-            "name": fallacy_name,
-            "info": fallacy_info,
-            "mitigation": fallacy_mitigation,
-            "degree": fallacy_degree
-        }
+def generate_word_list(num_words):
+    word_list = [fake.word() for _ in range(num_words)]
+    return word_list
 
-    # Convert the dictionary to JSON format
-    json_data = json.dumps(fallacies_dict, indent=4)
-    
-    return json_data
+# Generate a list of 1 million words
+million_words = generate_word_list(1000000)
+
+# Print the first 10 words as an example
+print("Created List")
+
+
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+
+def build_trie(word_database):
+    root = TrieNode()
+    for word in word_database:
+        current = root
+        for char in word:
+            if char not in current.children:
+                current.children[char] = TrieNode()
+            current = current.children[char]
+        current.is_end_of_word = True
+    return root
+
+def search_words_with_indices(string, root):
+    def search_from_index(index, node):
+        current = node
+        word_start = index
+        while index < len(string) and string[index] in current.children:
+            current = current.children[string[index]]
+            index += 1
+            if current.is_end_of_word:
+                found_words.append({'word': string[word_start:index], 'start_index': word_start, 'end_index': index - 1})
+
+    found_words = []
+    for i in range(len(string)):
+        search_from_index(i, root)
+    return found_words
 
 # Example usage:
-fallacies_json = generate_fallacies_json(
-    2,
-    fallacy_1_name="Ad Hominem",
-    fallacy_1_info="Attacking the person making the argument rather than the argument itself.",
-    fallacy_1_mitigation="Focus on the argument itself and provide evidence and reasoning.",
-    fallacy_1_degree="Low",
-    fallacy_2_name="Straw Man",
-    fallacy_2_info="Misrepresenting someone's argument to make it easier to attack.",
-    fallacy_2_mitigation="Address the actual argument being made and avoid misrepresentation.",
-    fallacy_2_degree="Medium"
-)
-print(fallacies_json)
+string = "This is a sample string containing some words."
+word_database = million_words
+
+# Build Trie from word database
+trie_root = build_trie(word_database)
+print("built trie root")
+
+# Search for words in the string using the Trie
+found_words = search_words_with_indices(string, trie_root)
+print("Words found in the string:")
+for word_info in found_words:
+    print("Word:", word_info['word'])
+    print("Start Index:", word_info['start_index'])
+    print("End Index:", word_info['end_index'])
+
+
+
+#This builds the trie from an sql query:
+
+import sqlite3
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+
+def build_trie_from_query_results(cursor):
+    root = TrieNode()
+    for row in cursor.fetchall():
+        word = row[0]  # Assuming the word is in the first column
+        current = root
+        for char in word:
+            if char not in current.children:
+                current.children[char] = TrieNode()
+            current = current.children[char]
+        current.is_end_of_word = True
+    return root
+
+# Connect to the SQLite database
+conn = sqlite3.connect('your_database.db')
+cursor = conn.cursor()
+
+# Execute the SQL query
+cursor.execute("SELECT word FROM words")
+
+# Build the Trie from the query results
+trie_root = build_trie_from_query_results(cursor)
+
+# Close the database connection
+conn.close()
