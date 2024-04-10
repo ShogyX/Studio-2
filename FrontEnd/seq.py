@@ -179,7 +179,7 @@ def check_character_types(s):
     return json.dumps(result, indent=4)
 
 
-def retrieve_password_fallacy(fallacy_name, json_file_path="responses.json"):
+def retrieve_password_fallacy(fallacy_name, json_file_path="FrontEnd/responses.json"):
     with open(json_file_path, 'r') as file:
         data = json.load(file)
     
@@ -191,7 +191,13 @@ def umbrellafunc (input_string):
     results_frontend = {}
     #check the length
     if len(input_string) < 8:
-        print(retrieve_password_fallacy("length_short"))
-
-
-umbrellafunc("Hello")
+        retrieve_password_fallacy("length_short")
+        #Length is short
+    elif len(input_string) > 8 and len(input_string) < 12:
+        #Length is moderate
+        retrieve_password_fallacy("length_moderate")
+    else:
+        #Length is strong
+        pass
+    
+    

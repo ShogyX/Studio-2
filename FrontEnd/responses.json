@@ -4,6 +4,11 @@
         "description": "Password length should be at least 8 characters.",
         "example": ""
     },
+    "length_moderate": {
+        "Rule": "Rule_name",
+        "description": "Password length should be at least 8 characters.",
+        "example": ""
+    },
     "no_uppercase": {
         "Rule": "Rule_name",
         "description": "Password should contain at least one uppercase letter.",
