@@ -187,8 +187,7 @@ def retrieve_password_fallacy(fallacy_name, json_file_path="FrontEnd/responses.j
 
 
 def umbrellafunc (input_string):
-    pass
-    results_frontend = {}
+    password_info = {}
     #check the length
     if len(input_string) < 8:
         retrieve_password_fallacy("length_short")
@@ -200,4 +199,31 @@ def umbrellafunc (input_string):
         #Length is strong
         pass
     
+    # Find integer sequences
+    integer_sequences = find_integer_sequences(input_string)
     
+    # Find character positions
+    character_positions = find_character_positions(input_string)
+    
+    # Find character sequences
+    character_sequences = find_character_sequences(input_string)
+    
+    # Find repeated combinations
+    repeated_combinations = find_repeated_combinations(input_string)
+    
+    # Check character types
+    character_types = check_character_types(input_string)
+    
+    # Combine all results into a single dictionary
+    password_info = {
+        "integer_sequences": json.loads(integer_sequences),
+        "character_positions": json.loads(character_positions),
+        "character_repetitions": json.loads(character_sequences),
+        "repeated_combinations": json.loads(repeated_combinations),
+        "character_types": json.loads(character_types)
+    }
+    return password_info
+
+input_string = "ab1c23!D4ef5"
+password_info = umbrellafunc(input_string)
+print(json.dumps(password_info, indent=4))
