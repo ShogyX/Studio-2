@@ -11,19 +11,8 @@
 
 <body>
     
-    </div>
     <div class="container">
-        <h1>Super PSM 3000</h1>
-        <div class="input-container">
-            <div class="password-input-container">
-                <input id="input_text" type="password" placeholder="Enter your password" oninput="checkPasswordStrength(this.value)">
-                <span class="password-toggle-icon" onclick="togglePasswordVisibility()">
-                    <i class="fas fa-eye"></i>
-                </span>
-            </div>
-            <button id="analyze_button" onclick="analyzePassword()">Analyze</button>
-        </div>
-        <div id="analysis_result">
+        <div class="second-container">
             <div>
                 <span id="uppercase">Uppecase</span>
             </div>
@@ -34,22 +23,40 @@
                 <span id="numbers">Integers</span>
             </div>
             <div>
-                <span id="special">Special-Characters</span>
-            </div>
-
-        <div class="meter-container">
-            <div class="progress-circle">
-                <svg class="progress-circle__svg" viewBox="0 0 100 100">
-                  <circle class="progress-circle__background" cx="50" cy="50" r="45"></circle>
-                  <circle class="progress-circle__progress" cx="50" cy="50" r="45"></circle>
-                  <text class="progress-circle__text" x="50" y="50" text-anchor="middle" alignment-baseline="middle"></text>
-                </svg>
-              </div>
+                <span id="special">Special Characters</span>
             </div>
         </div>
+        <h1>Super PSM 3000</h1>
+        <div class="input-container">
+            <div class="password-input-container">
+                <input id="input_text" type="password" placeholder="Enter your password" oninput="checkPasswordStrength(this.value)">
+                <span class="password-toggle-icon" onclick="togglePasswordVisibility()">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+            <button id="analyze_button" onclick="analyzePassword()">Analyze</button>
+        </div>
+
         
+            <div class="meter-container">
+                <div class="progress-circle">
+                    <svg class="progress-circle__svg" viewBox="0 0 100 100">
+                    <circle class="progress-circle__background" cx="50" cy="50" r="45"></circle>
+                    <circle class="progress-circle__progress" cx="50" cy="50" r="45"></circle>
+                    <text class="progress-circle__text" x="50" y="50" text-anchor="middle" alignment-baseline="middle"></text>
+                    </svg>
+                </div>
+                </div>
         <div class="info-box-container" id="info-box-container">
         </div>
+
+        <div id="placeholder-box" class="info-box placeholder-box">
+            <div class="placeholder-info-box-title">Currently Downloading More RAM</div>
+            <div class="placeholder-info-box-message">Installing CPU</div>
+        </div>
+
+        
+
         <div class="loading-overlay" id="loading-overlay">
             <div class="loader"></div>
     </div>
@@ -57,7 +64,9 @@
     
 
     <script>
+        setProgress(0);
         infoBoxContainer.innerHTML = "";
+        
         function togglePasswordVisibility() {
             var passwordField = document.getElementById("input_text");
             var icon = document.querySelector(".password-toggle-icon i");
@@ -154,12 +163,6 @@
             loader.style.left = loaderLeft + 'px';
         }
 
-        // Call the positionLoader function whenever the window is resized
-        window.addEventListener('resize', positionLoader);
-
-        // Call the positionLoader function initially to position the loader
-        positionLoader();
-
         function showLoading() {
             positionLoader();
             document.getElementById("loading-overlay").style.display = "block";
@@ -173,8 +176,6 @@
         function analyzePassword() {
             showLoading();
             var passwordField = document.getElementById("input_text").value;
-            var strengthIndicator = document.getElementById("analysis_result");
-            var feedbackContainer = document.getElementById("feedback");
             var infoBoxContainer = document.getElementById("info-box-container");
             
             fetch('/analyze', {
@@ -189,68 +190,20 @@
                 hideLoading();
                 infoBoxContainer.innerHTML = "";
                 createInfoBoxes(data);
-
-                if (data.Strength === 'Strong') {
-                    setProgress(100);
-                } else if (data.Strength === 'Moderate') {
-                    setProgress(50);
-                } else {
-                    setProgress(25);
-                }
             })
             .catch(error => {
                 console.error('Error:', error);
             });
         }
 
-        function updateFeedbackContainer(data) {
-            var feedbackContainer = document.querySelector(".feedback-container");
-
-            // Clear previous content and reset classes
-            feedbackContainer.innerHTML = "";
-            feedbackContainer.classList.remove("weak", "moderate", "strong");
-
-            // Display password strength
-            var strengthParagraph = document.createElement("p");
-            strengthParagraph.textContent = "Password Strength: " + data.Strength;
-            feedbackContainer.appendChild(strengthParagraph);
-
-            // Display feedback
-            var feedbackParagraph = document.createElement("p");
-            feedbackParagraph.textContent = "Feedback: " + data.Feedback;
-            feedbackContainer.appendChild(feedbackParagraph);
-
-            // Display detailed analysis result
-            var analysisDetails = data.AnalysisDetails;
-            if (analysisDetails) {
-                var detailsHeading = document.createElement("h3");
-                detailsHeading.textContent = "Analysis Details:";
-                feedbackContainer.appendChild(detailsHeading);
-
-                var detailsList = document.createElement("ul");
-                feedbackContainer.appendChild(detailsList);
-
-                for (var key in analysisDetails) {
-                    var detailItem = document.createElement("li");
-                    detailItem.textContent = key + ": " + analysisDetails[key];
-                    detailsList.appendChild(detailItem);
-                }
-            }
-
-            if (data.Strength === "Weak") {
-                feedbackContainer.classList.add("weak");
-            } else if (data.Strength === "Moderate") {
-                feedbackContainer.classList.add("moderate");
-            } else if (data.Strength === "Strong") {
-                feedbackContainer.classList.add("strong");
-            }
-        }
-
         function createInfoBoxes(data) {
             var container = document.getElementById('info-box-container');
-
+            // Hide the placeholder box
+            var placeholderBox = document.getElementById('placeholder-box');
+            placeholderBox.style.display = 'none'
             // Loop through each key in the JSON
             for (var key in data) {
+                
                 if (key !== 'Issues Found') {
                     var messages = data[key];
                     if (messages.length > 0) {
@@ -274,13 +227,70 @@
 
                         // Append information box to container
                         container.appendChild(infoBox);
+
+                    }
+                }
+                if (key === 'Issues Found') {
+                    var issuesFound = data[key]; // Assuming 'issuesFound' is the variable to store the number of issues found
+                    if (issuesFound === 0) {
+                        setProgress(100);
+                        // Create an information box
+                        var infoBox = document.createElement('div');
+                        infoBox.classList.add('info-box');
+
+                        // Set title
+                        var title = document.createElement('div');
+                        title.classList.add('info-box-title');
+                        title.textContent = 'No issues found';
+                        infoBox.appendChild(title);
+
+                        // Create a message box
+                        var messageBox = document.createElement('div');
+                        messageBox.classList.add('info-box-message');
+                        messageBox.textContent = 'Congratulations! We cant find any common fallacies in your password. We still recommend testing the password on other PSM sites to ensure the password is strong enough';
+                        infoBox.appendChild(messageBox);
+
+                        // Append information box to regular container
+                        var container = document.getElementById('info-box-container');
+                        container.appendChild(infoBox);
+                        
+                        // Hide the placeholder box
+                        var placeholderBox = document.getElementById('placeholder-box');
+                        placeholderBox.style.display = 'none';
+
+                        // Change the color of the info box elements
+                        
+                        var infoBoxTitle = document.querySelector('.info-box-title');
+                        infoBoxTitle.style.backgroundColor = '#32CD32'; // Green background color
+
+                        var infoBoxMessage = document.querySelector('.info-box-message');
+                        infoBoxMessage.style.backgroundColor = '#5CCD6F'; // Light green background color
+
+
+                    } else if (issuesFound === 1) {
+                        setProgress(90);
+                    } else if (issuesFound === 2) {
+                        setProgress(75);
+                    } else if (issuesFound === 3) {
+                        setProgress(50);
+                    } else if (issuesFound === 4) {
+                        setProgress(25);
+                    } else if (issuesFound === 5) {
+                        // Set progress to a value appropriate for 5 issues found
+                        setProgress(someValue);
+                    } else {
+                        setProgress(0);
                     }
                 }
             }
+            // Show the info box container
+            container.style.display = 'block';
+
+            
         }
 
         
-
+        
 
     </script>
 </body>

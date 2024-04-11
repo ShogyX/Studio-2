@@ -209,7 +209,7 @@ def umbrellafunc (input_string):
     issues_found = 0
     password_info = {"Length Requirement!":[], "Common Sequence of Numbers!":[], "Repeated Letter Sequence!":[], "Predictable Character Placement!":[], "Repeated Combinations!":[], "Missing Character Type!":[]}
     #check the length
-    if len(input_string) < 8:
+    if len(input_string) <= 8:
         Rule_Type = "Length Requirement!"
         issues_found += 1
         password_info[Rule_Type].append("Your Password is too short! We recommend more than 12 characters in length!")

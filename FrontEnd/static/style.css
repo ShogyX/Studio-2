@@ -39,19 +39,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-input[type="password"] {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #333;
-    border-radius: 5px;
-    font-size: 16px;
-    background-color: #333;
-    color: #eee;
-    margin-right: 10px; /* Adjusted margin-right for more space */
-}
-
-
-input[type="text"] {
+input[type="password"], input[type="text"] {
     flex: 1;
     padding: 10px;
     border: 1px solid #333;
@@ -122,6 +110,20 @@ h1 {
   }
 
 
+
+.second-container {
+    position: fixed; /* Position relative to the parent container */
+    left: 57.3%;
+    top: 30%;
+    min-width: 150px;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 9999;
+}
+
+
 .password-input-container {
     display: flex;
     position: relative;
@@ -149,19 +151,6 @@ h1 {
     font-size: 18px; /* Adjust the font size as needed */
 }
 
-#analysis_result {
-    display: flex;
-    justify-content: left;
-}
-
-#analysis_result > div {
-    margin: 0 6px;
-}
-
-#analysis_result > div > span {
-    display: block;
-}
-
 /* Styling for the information boxes */
 .info-box-container {
     position: relative;
@@ -170,14 +159,13 @@ h1 {
     transform: translateX(-50%);
     width: 100%; /* Adjust the width as needed */
     max-width: 760px; /* Maximum width of the container */
-    
-    border-radius: 25px;
+    border-radius: 15px;
 }
 
 .info-box {
     
     color: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
     opacity: 0; /* Initially hidden */
@@ -197,7 +185,7 @@ h1 {
     background-color: #ef545b; /* Light red */
     padding: 10px;
     border-radius: 5px; /* Rounded corners */
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     line-height: 1.5; /* Increase line height for better readability */
 }
 .info-box-message:last-child {
@@ -225,6 +213,30 @@ h1 {
     }
 }
 
+.placeholder-box {
+    position: rela;
+    background-color: transparent; /* Example background color for placeholder */
+    color: #fff; /* Example text color for placeholder */
+    opacity: 0.7; /* Example opacity for placeholder */
+    /* Add any other styles for the placeholder box */
+}
+
+.placeholder-info-box-title {
+    background-color: #da8d19; /* Dark red */
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
+}
+
+.placeholder-info-box-message {
+    background-color: #ddc53d; /* Light red */
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 5px;
+    line-height: 1.5; /* Increase line height for better readability */
+}
 
 .loading-overlay {
     position: absolute;
