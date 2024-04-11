@@ -201,6 +201,19 @@ def retrieve_password_fallacy(fallacy_name, json_file_path="FrontEnd/responses.j
     
     return data.get(fallacy_name)
 
+def find_years(string):
+    pattern = re.compile(r'\b\d{4}\b|\D(\d{4})\D')
+    matches = pattern.findall(string)
+    years = []
+    for match in matches:
+        if match.isdigit():
+            years.append(match)
+        else:
+            # Extract only the digits from the matched pattern
+            year = re.search(r'\d{4}', match)
+            if year:
+                years.append(year.group())
+    return years
 
 def umbrellafunc (input_string):
 
@@ -323,7 +336,12 @@ def umbrellafunc (input_string):
             #Configure a statement to take in the combination and the times it was repeated. like
             password_info[Rule_Type].append(f"The following combination '{combination}' was repeated within your password {times_repeated} times!")
             
-
+    
+    for year in find_years(input_string):
+        pass
+        if len (year) > 3:
+            issues_found += 1
+            password_info["Common Sequence of Numbers!"].append(f"The following combination of integers '{year}' was found in your password. We suspect this might be a year which is easy to gueass.")
     
     # Check if password contains all character types!
     check_character_types_data = json.loads(check_character_types(input_string))
