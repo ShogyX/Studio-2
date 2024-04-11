@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 #imports functions from the local AnalysisFunctions script
-from AnalysisFunctions import RunFullAnalysis
+from AnalysisFunctions import umbrellafunc
 
 #Initialize the app with Flask
 app = Flask(__name__)
@@ -16,7 +16,7 @@ def index():
 def analyze():
     if request.method == 'POST':
         password = request.form['input_text']
-        analysis_result = RunFullAnalysis(password)
+        analysis_result = umbrellafunc(password)
         return analysis_result
 
 

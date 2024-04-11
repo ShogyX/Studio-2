@@ -1,10 +1,6 @@
 import re
 import json
 
-string = "ThisisatexT123!G"
-s = "ThisisatexT123!G"
-input_string = "ThisisatexT123!G"
-
 #finds integer sequences and checks if they are at the end or beginning of a string and if they are the only occurence of integers in the string.
 def find_integer_sequences(input_string, only_occurrence=True):
     # Find all instances of integers in the input string
@@ -40,7 +36,7 @@ def find_integer_sequences(input_string, only_occurrence=True):
 def find_character_positions(s):
     results = {}
 
-    for char_type in ['uppercase', 'digit', 'special', 'lowercase']:
+    for char_type in ['uppercase letter', 'number', 'special-character', 'lowercase letter']:
         positions = []
         found_single_occurrence = False
         found_start = False
@@ -48,7 +44,7 @@ def find_character_positions(s):
         found_middle = False
         
         for i, char in enumerate(s):
-            if char_type == 'lowercase' and char.islower():
+            if char_type == 'lowercase letter' and char.islower():
                 positions.append(i)
                 if len(positions) > 1:
                     found_single_occurrence = False
@@ -61,7 +57,7 @@ def find_character_positions(s):
                 else:
                     found_middle = True  # Set found_middle to True if character is in the middle
                     
-            elif char_type == 'uppercase' and char.isupper():
+            elif char_type == 'uppercase letter' and char.isupper():
                 positions.append(i)
                 if len(positions) > 1:
                     found_single_occurrence = False
@@ -74,7 +70,7 @@ def find_character_positions(s):
                 else:
                     found_middle = True  # Set found_middle to True if character is in the middle
 
-            elif char_type == 'digit' and char.isdigit():
+            elif char_type == 'number' and char.isdigit():
                 positions.append(i)
                 if len(positions) > 1:
                     found_single_occurrence = False
@@ -87,7 +83,7 @@ def find_character_positions(s):
                 else:
                     found_middle = True  # Set found_middle to True if character is in the middle
 
-            elif char_type == 'special' and not char.isalnum():
+            elif char_type == 'special-character' and not char.isalnum():
                 positions.append(i)
                 if len(positions) > 1:
                     found_single_occurrence = False
@@ -209,20 +205,22 @@ def retrieve_password_fallacy(fallacy_name, json_file_path="FrontEnd/responses.j
 def umbrellafunc (input_string):
 
     issues_found = 0
-    password_info = {}
+    password_info = {"Length Requirement!":[], "Common Sequence of Numbers!":[], "Repeated Letter Sequence!":[], "Predictable Character Placement!":[], "Repeated Combinations!":[], "Missing Character Type!":[]}
     #check the length
     if len(input_string) < 8:
-        retrieve_password_fallacy("length_short")
+        Rule_Type = "Length Requirement!"
         issues_found += 1
+        password_info[Rule_Type].append("Your Password is too short! We recommend more than 12 characters in length!")
         #Length is short
+
+
     elif len(input_string) > 8 and len(input_string) < 12:
         #Length is moderate
-        retrieve_password_fallacy("length_moderate")
+        Rule_Type = "Length Requirement!"
         issues_found += 1
-    else:
-        #Length is strong
-        pass
-    
+        password_info[Rule_Type].append("Your Password is above the minimum requirement, but would benefit from being above 12 characters long!")
+        
+
     # Find integer sequences
     integer_sequences_json = find_integer_sequences(input_string)
     integer_sequences_data = json.loads(integer_sequences_json)
@@ -230,7 +228,7 @@ def umbrellafunc (input_string):
     character_repetitions_found = []
 
     for key, value in integer_sequences_data.items():
-        
+        Rule_Type = "Common Sequence of Numbers!"
         #This is the integer sequence that was found
         if len(key) > 1:
             integer_sequences_found.append(key)
@@ -240,27 +238,27 @@ def umbrellafunc (input_string):
         only_instance = value["only_occurrence"]
 
         if only_instance == True and at_end == True:
-            
+            password_info[Rule_Type].append("All the numbers in your password are in an easy to guess sequence and placed at the end of the password which is easy to guess")
             issues_found += 1
             # all integers in password are at the end in a sequence
 
         elif only_instance == True and at_start == True:
-            
+            password_info[Rule_Type].append("All the numbers in your password are in an easy to guess sequence and placed at the beginning of the password which is easy to guess")
             issues_found += 1
             # all integers in password are at the start in a sequence
 
         elif only_instance == True:
-            
+            password_info[Rule_Type].append("All the numbers in your password are in an easy to guess sequence")
             issues_found += 1
             # all integers in password are grouped in a sequence 
         
         elif at_end == True and at_start == True:
-            
+            password_info[Rule_Type].append("You have repeated an easy to guess number sequence at the end and beginning of your password!")
             issues_found += 1
             # repeated combo at the start and beginning
 
         elif only_instance == False:
-
+            password_info[Rule_Type].append("You have included an easy to guess number sequence in your password!")
             issues_found += 1
             # found sequential combination of integers in password
 
@@ -270,15 +268,18 @@ def umbrellafunc (input_string):
 
     
     for key, value in find_character_sequences_data.items():
+        Rule_Type = "Repeated Letter Sequence!"
         if len(key) > 2:
             only_instance = value["only_occurrence"]
         character_repetitions_found.append(key)
+
         if only_instance == True:
-            #One instance of repeated characters
+            password_info[Rule_Type].append("You have included a sequence of repeated letters in your password!")
             issues_found += 1
         else:
             #Multiple instances of repeated characters.
             issues_found += 1
+            password_info[Rule_Type].append("You have included multiple sequences of repeated letters in your password!")
 
     # Find issues in character placement and occurences
     find_character_positions_json = find_character_positions(input_string)
@@ -286,6 +287,7 @@ def umbrellafunc (input_string):
 
 
     for key, value in find_character_positions_data.items():
+        Rule_Type = "Predictable Character Placement!"
         at_start = value["start"]
         at_end = value["end"]
         at_middle = value["middle"]
@@ -295,51 +297,58 @@ def umbrellafunc (input_string):
             if at_end == True and at_start == False:
                 issues_found += 1
                 #single instance at the end
+                password_info[Rule_Type].append(f"The only instance of a {key} in your password is at the beginning of the password")
                 
             elif at_end == False and at_start == True:
                 issues_found += 1
                 #single instance at the start
+                password_info[Rule_Type].append(f"The only instance of a {key} in your password is at the end of the password")
                 
             elif at_start == True and at_end == True:
                 if input_string[0] == input_string[-1]:
                     issues_found += 1
                     #both instances of the character are at the beginning and end, and match.
+                    password_info[Rule_Type].append(f"The only two instances of a {key} in your password is at the beginning and end of the password")
 
     # Find issues in repeated combinations of letters, digits and or special characters.
     find_repeated_character_combinations_data = json.loads(find_repeated_character_combinations(input_string))
     statements = []
     for key, value in find_repeated_character_combinations_data.items():
+        Rule_Type = "Repeated Combinations!"
         combination = key
         type = value["type"]
         times_repeated = value["times_repeated"]
         if times_repeated > 1:
             issues_found += 1
             #Configure a statement to take in the combination and the times it was repeated. like
-            statement = f"The following combination \"{combination}\" was repeated within your password {times_repeated} times!"
+            password_info[Rule_Type].append(f"The following combination '{combination}' was repeated within your password {times_repeated} times!")
             
+
     
     # Check if password contains all character types!
     check_character_types_data = json.loads(check_character_types(input_string))
     for key,value in check_character_types_data.items():
+        Rule_Type = "Missing Character Type!"
         if value == False:
             if key == "lowercase":
                 #Add lacks lowercase character statement
+                password_info[Rule_Type].append("Your password lacks the inclusion of a lowercase letter")
                 issues_found += 1
             elif key == "uppercase":
                 issues_found += 1
                 #Add lacks lowercase character statement
+                password_info[Rule_Type].append("Your password lacks the inclusion of a uppercase letter")
 
             elif key == "integer":
                 issues_found += 1
                 #Add lacks lowercase character statement
+                password_info[Rule_Type].append("Your password lacks the inclusion of a number")
 
             elif key == "special":
                 issues_found += 1
                 #Add lacks lowercase character statement
+                password_info[Rule_Type].append("Your password lacks the inclusion of a special character")
 
 
-    print(issues_found)
-    return password_info
-
-input_string = "fff123abcefff123fff"
-password_info = umbrellafunc(input_string)
+    password_info["Issues Found"] = issues_found
+    return json.dumps(password_info, indent=4)

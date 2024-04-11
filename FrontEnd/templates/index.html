@@ -146,7 +146,8 @@
             })
             .then(response => response.json())
             .then(data => {
-                updateFeedbackContainer(data);
+                
+                createInfoBoxes(data);
 
                 if (data.Strength === 'Strong') {
                     setProgress(100);
@@ -203,6 +204,40 @@
                 feedbackContainer.classList.add("strong");
             }
         }
+
+        function createInfoBoxes(data) {
+            var container = document.getElementById('info-box-container');
+
+            // Loop through each key in the JSON
+            for (var key in data) {
+                if (key !== 'Issues Found') {
+                    var messages = data[key];
+                    if (messages.length > 0) {
+                        // Create information box
+                        var infoBox = document.createElement('div');
+                        infoBox.classList.add('info-box');
+
+                        // Set title
+                        var title = document.createElement('div');
+                        title.classList.add('info-box-title');
+                        title.textContent = key;
+                        infoBox.appendChild(title);
+
+                        // Set messages
+                        messages.forEach(function(message) {
+                            var messageElement = document.createElement('div');
+                            messageElement.classList.add('info-box-message');
+                            messageElement.textContent = message;
+                            infoBox.appendChild(messageElement);
+                        });
+
+                        // Append information box to container
+                        container.appendChild(infoBox);
+                    }
+                }
+            }
+        }
+
 
 
     </script>

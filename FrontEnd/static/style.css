@@ -188,3 +188,19 @@ h1 {
 .feedback-container.strong {
     border: 2px solid green;
 }
+
+.info-box {
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+.info-box-title {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+.info-box-message {
+    color: #555;
+}
