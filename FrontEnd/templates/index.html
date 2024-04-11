@@ -10,6 +10,8 @@
 
 
 <body>
+    
+    </div>
     <div class="container">
         <h1>Super PSM 3000</h1>
         <div class="input-container">
@@ -45,13 +47,17 @@
               </div>
             </div>
         </div>
+        
+        <div class="info-box-container" id="info-box-container">
+        </div>
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loader"></div>
     </div>
-    <div class="feedback-container">
 
-    </div>
+    
 
     <script>
-
+        infoBoxContainer.innerHTML = "";
         function togglePasswordVisibility() {
             var passwordField = document.getElementById("input_text");
             var icon = document.querySelector(".password-toggle-icon i");
@@ -132,10 +138,44 @@
         }
         }
         
+        function positionLoader() {
+            var infoBoxContainer = document.getElementById('info-box-container');
+            var loader = document.querySelector('.loader');
+
+            // Calculate the position of the loader
+            var containerRect = infoBoxContainer.getBoundingClientRect();
+            var loaderWidth = loader.offsetWidth;
+            var loaderHeight = loader.offsetHeight;
+            var loaderTop = containerRect.top + (containerRect.height / 2) - (loaderHeight / 2);
+            var loaderLeft = containerRect.left + (containerRect.width / 2) - (loaderWidth / 2);
+
+            // Set the position of the loader
+            loader.style.top = loaderTop + 'px';
+            loader.style.left = loaderLeft + 'px';
+        }
+
+        // Call the positionLoader function whenever the window is resized
+        window.addEventListener('resize', positionLoader);
+
+        // Call the positionLoader function initially to position the loader
+        positionLoader();
+
+        function showLoading() {
+            positionLoader();
+            document.getElementById("loading-overlay").style.display = "block";
+        }
+
+        function hideLoading() {
+            document.getElementById("loading-overlay").style.display = "none";
+            
+        }
+
         function analyzePassword() {
+            showLoading();
             var passwordField = document.getElementById("input_text").value;
             var strengthIndicator = document.getElementById("analysis_result");
             var feedbackContainer = document.getElementById("feedback");
+            var infoBoxContainer = document.getElementById("info-box-container");
             
             fetch('/analyze', {
                 method: 'POST',
@@ -146,7 +186,8 @@
             })
             .then(response => response.json())
             .then(data => {
-                
+                hideLoading();
+                infoBoxContainer.innerHTML = "";
                 createInfoBoxes(data);
 
                 if (data.Strength === 'Strong') {
@@ -238,6 +279,7 @@
             }
         }
 
+        
 
 
     </script>

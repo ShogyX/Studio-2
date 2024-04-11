@@ -1,6 +1,8 @@
 import re
 import json
 
+
+
 #finds integer sequences and checks if they are at the end or beginning of a string and if they are the only occurence of integers in the string.
 def find_integer_sequences(input_string, only_occurrence=True):
     # Find all instances of integers in the input string

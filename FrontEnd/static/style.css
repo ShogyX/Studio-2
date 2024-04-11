@@ -9,6 +9,7 @@ body {
     top: 8%;
     left: 28%;
     width: 500px;
+    height: 500px;
     background-color: #222;
     padding: 20px;
     border-radius: 25px;
@@ -93,8 +94,8 @@ h1 {
 
 }
 .progress-circle {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
   }
   
   .progress-circle__svg {
@@ -161,46 +162,96 @@ h1 {
     display: block;
 }
 
-
-.feedback-container {
-    position: absolute;
-    top: 38%;
-    left: 28%;
-    width: 500px;
-    background-color: #222;
-    padding: 20px;
+/* Styling for the information boxes */
+.info-box-container {
+    position: relative;
+    top: 50%; /* Position below the container */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%; /* Adjust the width as needed */
+    max-width: 760px; /* Maximum width of the container */
+    
     border-radius: 25px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column; /* Stack child elements vertically */
-    align-items: left; /* Center child elements horizontally */
-    height: auto; /* Fixed height for the container */
-}
-
-.feedback-container.weak {
-    border: 2px solid red;
-}
-
-.feedback-container.moderate {
-    border: 2px solid orange;
-}
-
-.feedback-container.strong {
-    border: 2px solid green;
 }
 
 .info-box {
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
+    
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
     margin-bottom: 10px;
-    background-color: #f9f9f9;
+    opacity: 0; /* Initially hidden */
+    animation: slideUpFadeIn 1.5s forwards; /* Fade-in animation */
 }
+
 .info-box-title {
+    background-color: #721c24; /* Dark red */
     font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
 }
+
 .info-box-message {
-    color: #555;
+    background-color: #ef545b; /* Light red */
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 5px;
+    line-height: 1.5; /* Increase line height for better readability */
+}
+.info-box-message:last-child {
+    margin-bottom: 0;
+}
+/* Fade-in animation keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+@keyframes slideUpFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Start position below */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* End position at original position */
+    }
+}
+
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    display: none; /* Initially hidden */
+    
+}
+
+.loader {
+    position: fixed; /* Fixed position to keep it in the same place relative to the viewport */
+    top: 35%; /* Adjust the vertical position */
+    left: 43%; /* Adjust the horizontal position */
+    transform: translate(-50%, -50%); /* Center the loader */
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite; /* Spin animation */
+}
+
+/* Spin animation keyframes */
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }

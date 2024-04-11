@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 #imports functions from the local AnalysisFunctions script
 from AnalysisFunctions import umbrellafunc
+import time
+
 
 #Initialize the app with Flask
 app = Flask(__name__)
@@ -17,6 +19,7 @@ def analyze():
     if request.method == 'POST':
         password = request.form['input_text']
         analysis_result = umbrellafunc(password)
+        #time.sleep(2)
         return analysis_result
 
 
