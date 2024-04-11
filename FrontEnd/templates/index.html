@@ -64,7 +64,7 @@
     
 
     <script>
-        setProgress(0);
+        
         infoBoxContainer.innerHTML = "";
         
         function togglePasswordVisibility() {
@@ -276,8 +276,7 @@
                     } else if (issuesFound === 4) {
                         setProgress(25);
                     } else if (issuesFound === 5) {
-                        // Set progress to a value appropriate for 5 issues found
-                        setProgress(someValue);
+                        setProgress(0);
                     } else {
                         setProgress(0);
                     }
