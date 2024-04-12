@@ -120,7 +120,7 @@ h1 {
     padding: 20px;
     border-radius: 25px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 9999;
+    
 }
 
 
@@ -169,7 +169,7 @@ h1 {
     border-radius: 10px;
     margin-bottom: 10px;
     opacity: 0; /* Initially hidden */
-    animation: slideUpFadeIn 1.5s forwards; /* Fade-in animation */
+    animation: slideUpFadeIn 1.2s forwards; /* Fade-in animation */
 }
 
 .info-box-title {
