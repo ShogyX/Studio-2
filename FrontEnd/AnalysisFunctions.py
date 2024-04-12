@@ -1,8 +1,6 @@
 import re
 import json
 
-
-
 #this will search for combinations of letters in alphabetical order longer than 2
 def search_abcs(input_string):
     org_string = input_string
@@ -242,7 +240,7 @@ def retrieve_password_fallacy(fallacy_name, json_file_path="FrontEnd/responses.j
 def umbrellafunc (input_string):
 
     issues_found = 0
-    password_info = {"Length Requirement!":[], "Common Sequence of Numbers!":[], "Repeated Letter Sequence!":[], "Predictable Character Placement!":[], "Repeated Combinations!":[], "Missing Character Type!":[]}
+    password_info = {"Length Requirement!":[], "Common Sequence of Numbers!":[], "Repeated Letter Sequence!":[], "Predictable Character Placement!":[], "Repeated Combinations!":[], "Missing Character Type!":[], "Predictable Character Sequence!":[]}
     #check the length
     if len(input_string) <= 8:
         Rule_Type = "Length Requirement!"
