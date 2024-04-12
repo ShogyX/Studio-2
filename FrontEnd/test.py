@@ -1,98 +1,106 @@
-from faker import Faker
+import json
+import csv
+import re
 
-fake = Faker()
+def contains_integers_or_special_chars(s):
+    # Regular expression to match integers or special characters
+    regex = re.compile(r'[0-9!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>/?]')
+    return bool(regex.search(s))
 
-def generate_word_list(num_words):
-    word_list = [fake.word() for _ in range(num_words)]
-    return word_list
+def convert_from_leet(input_string):
+    leetspeak_dict = {
+    'a': ['4', '@', 'A', 'a', '/\\', '/-\\'],
+    'b': ['8', 'B', '|3', 'b', '13', '!3', '6', 'I3', '!3', '/3'],
+    'c': ['(', '[', '{', '<', 'C', 'c'],
+    'd': ['|)', '|]', 'D', 'd', 'cl', 'cI', 'I)', 'I]'],
+    'e': ['3', 'E', 'e', '[-'],
+    'f': ['|=', 'F', 'f', '/=', 'I=', 'ph'],
+    'g': ['6', '9', 'G', 'g', '(_-', '(_+', 'C-', '[,'],
+    'h': ['#', '|-|', 'H', 'h', '|~|', 'I-I', 'I~I', ']-[', ']~[', '}{', ')-(', '(-)', ')~(', '(~)'],
+    'i': ['1', '!', '|', 'I', 'i', '[]'],
+    'j': ['_|', 'J', 'j'],
+    'k': ['|<', 'K', 'k', '|c', 'Ic', '|{', '|('],
+    'l': ['1', '|_', 'L', 'l', '|', '7'],
+    'm': ['|\\/|', 'M', 'm'],
+    'n': ['|\\|', 'N', 'n'],
+    'o': ['0', 'O', 'o', '<>'],
+    'p': ['|D', '|o', 'P', 'p'],
+    'q': ['(,)', 'Q', 'q'],
+    'r': ['|2', 'R', 'r'],
+    's': ['5', '$', 'S', 's'],
+    't': ['7', '+', 'T', 't', '-|-', '~|~'],
+    'u': ['|_|', 'U', 'u', '(_)', 'L|'],
+    'v': ['\\/', 'V', 'v'],
+    'w': ['\\/\\/', 'VV', '\\N', '\'//', '\\\'', '\\^/', '(n)', '\\V/', '\\X/', '\\|/', '\\_|_/', '\\_:_/', 'uu', '2u', '\\\\//\\\\//', 'w', 'W'],
+    'x': ['%', '><', 'X', 'x'],
+    'y': ['`/', '7', '\\|/', '\\//', 'Y', 'y'],
+    'z': ['2', '7_', '-/_', '%', '>', '~/_', '-\\_', '-|_', 'z', 'Z'],
+    ' ': ['-', '_', ' '],
+    }
+    new_word = input_string
+    new_words = []
+    for letter in leetspeak_dict.keys():
+        list_of_subs = leetspeak_dict[letter]
+        for sub in list_of_subs:
+            if sub in input_string:
+                new_word = new_word.replace(sub, letter)
+                if new_word not in new_words:
+                    new_words.append(new_word)
+    
+    return new_word
 
-# Generate a list of 1 million words
-million_words = generate_word_list(1000000)
+def search_file(search_term, filename='FrontEnd/all_words.txt'):
 
-# Print the first 10 words as an example
-print("Created List")
+    if contains_integers_or_special_chars(search_term) == True:
+        search_term_2 = convert_from_leet(search_term)
+    else:
+        search_term_2 = ""
 
-
-
-class TrieNode:
-    def __init__(self):
-        self.children = {}
-        self.is_end_of_word = False
-
-def build_trie(word_database):
-    root = TrieNode()
-    for word in word_database:
-        current = root
-        for char in word:
-            if char not in current.children:
-                current.children[char] = TrieNode()
-            current = current.children[char]
-        current.is_end_of_word = True
-    return root
-
-def search_words_with_indices(string, root):
-    def search_from_index(index, node):
-        current = node
-        word_start = index
-        while index < len(string) and string[index] in current.children:
-            current = current.children[string[index]]
-            index += 1
-            if current.is_end_of_word:
-                found_words.append({'word': string[word_start:index], 'start_index': word_start, 'end_index': index - 1})
-
-    found_words = []
-    for i in range(len(string)):
-        search_from_index(i, root)
-    return found_words
-
-# Example usage:
-string = "This is a sample string containing some words."
-word_database = million_words
-
-# Build Trie from word database
-trie_root = build_trie(word_database)
-print("built trie root")
-
-# Search for words in the string using the Trie
-found_words = search_words_with_indices(string, trie_root)
-print("Words found in the string:")
-for word_info in found_words:
-    print("Word:", word_info['word'])
-    print("Start Index:", word_info['start_index'])
-    print("End Index:", word_info['end_index'])
+    rows = []
+    search_term = search_term.lower()
+    with open(filename, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            if row[1].lower() in search_term:
+                rows.append(row)
+                #print(row)
+            elif row[1].lower() in search_term_2:
+                row[2] = "Leet Match"
+                rows.append(row)
 
 
+    output = rows
+    output_lower = [[lang, word.lower(), source] for lang, word, source in output]
+    output_lower.sort(key=lambda x: len(x[1]), reverse=True)
+    filtered_output = []
+    added_words = set()
+    for item in output_lower:
+        word = item[1]
+        is_substring = False
+        for other_word in added_words:
+            if word in other_word:
+                is_substring = True
+                break
+        if not is_substring:
+            filtered_output.append(item)
+            added_words.add(word)
 
-#This builds the trie from an sql query:
+    # Convert filtered output to JSON format
+    json_output = []
+    for item in filtered_output:
+        json_output.append({
+            "language": item[0],
+            "word": item[1],
+            "source": item[2]
+        })
 
-import sqlite3
+    # Convert the list of dictionaries to JSON
+    return json.dumps(json_output, indent=4)
 
-class TrieNode:
-    def __init__(self):
-        self.children = {}
-        self.is_end_of_word = False
+input_string = "pasword"
 
-def build_trie_from_query_results(cursor):
-    root = TrieNode()
-    for row in cursor.fetchall():
-        word = row[0]  # Assuming the word is in the first column
-        current = root
-        for char in word:
-            if char not in current.children:
-                current.children[char] = TrieNode()
-            current = current.children[char]
-        current.is_end_of_word = True
-    return root
-
-# Connect to the SQLite database
-conn = sqlite3.connect('your_database.db')
-cursor = conn.cursor()
-
-# Execute the SQL query
-cursor.execute("SELECT word FROM words")
-
-# Build the Trie from the query results
-trie_root = build_trie_from_query_results(cursor)
-
-# Close the database connection
-conn.close()
+database_results = json.loads(search_file(input_string))
+for dict in database_results:
+    language = dict["language"]
+    word_found = dict["word"]
+    word_source = dict["source"]
