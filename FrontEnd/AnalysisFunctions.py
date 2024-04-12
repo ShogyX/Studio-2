@@ -3,6 +3,41 @@ import json
 
 
 
+#this will search for combinations of letters in alphabetical order longer than 2
+def search_abcs(input_string):
+    org_string = input_string
+    matching_string = "abcdefghijklmnopqrstuvwxyzæøå"
+    matches = []
+    match_length = 1
+    current_match = ""
+    for i, letter in enumerate (input_string.lower()):
+        if letter.isalpha() == True:
+            try:
+                index_in_alphabet = matching_string.index(letter)
+                if input_string.lower()[i+1] == matching_string[index_in_alphabet+1]:
+                    current_match += org_string[i]
+                    match_length += 1
+
+                elif match_length > 2:
+                    current_match += org_string[i]
+                    matches.append(current_match)
+                    match_length = 1
+                    current_match = ""
+
+                else:
+                    match_length = 1
+                    current_match = ""
+
+            except IndexError as e:
+                if match_length > 2:
+                    current_match += org_string[i]
+                    matches.append(current_match)
+                    match_length = 1
+                    current_match = ""   
+
+
+    return matches
+
 #finds integer sequences and checks if they are at the end or beginning of a string and if they are the only occurence of integers in the string.
 def find_integer_sequences(input_string, only_occurrence=True):
     # Find all instances of integers in the input string
@@ -222,6 +257,15 @@ def umbrellafunc (input_string):
         issues_found += 1
         password_info[Rule_Type].append("Your Password is above the minimum requirement, but would benefit from being above 12 characters long!")
         
+
+    #find abcs
+
+    abcs_found = search_abcs(input_string)
+    for combination in abcs_found:
+        Rule_Type = "Predictable Character Sequence!"
+        if len(combination) > 2:
+            issues_found += 1
+            password_info[Rule_Type].append(f"The following alphabetical sequence {combination} was found in your password!")
 
     # Find integer sequences
     integer_sequences_json = find_integer_sequences(input_string)
