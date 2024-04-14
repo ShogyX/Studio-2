@@ -2,10 +2,12 @@ import json
 import csv
 import re
 
-def contains_integers_or_special_chars(s):
+input_string = "sample"
+
+def contains_integers_or_special_chars(input_string):
     # Regular expression to match integers or special characters
     regex = re.compile(r'[0-9!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>/?]')
-    return bool(regex.search(s))
+    return bool(regex.search(input_string))
 
 def convert_from_leet(input_string):
     leetspeak_dict = {
@@ -49,22 +51,22 @@ def convert_from_leet(input_string):
     
     return new_word
 
-def search_file(search_term, filename='FrontEnd/all_words.txt'):
+def search_file(input_string, filename='FrontEnd/all_words.txt'):
 
-    if contains_integers_or_special_chars(search_term) == True:
-        search_term_2 = convert_from_leet(search_term)
+    if contains_integers_or_special_chars(input_string) == True:
+        input_string_2 = convert_from_leet(input_string)
     else:
-        search_term_2 = ""
+        input_string_2 = ""
 
     rows = []
-    search_term = search_term.lower()
+    input_string = input_string.lower()
     with open(filename, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
-            if row[1].lower() in search_term:
+            if row[1].lower() in input_string:
                 rows.append(row)
                 #print(row)
-            elif row[1].lower() in search_term_2:
+            elif row[1].lower() in input_string_2:
                 row[2] = "Leet Match"
                 rows.append(row)
 
@@ -104,3 +106,4 @@ for dict in database_results:
     language = dict["language"]
     word_found = dict["word"]
     word_source = dict["source"]
+

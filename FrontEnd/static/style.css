@@ -109,12 +109,10 @@ h1 {
     fill: #333; /* Text color */
   }
 
-
-
 .second-container {
-    position: fixed; /* Position relative to the parent container */
-    left: 57.3%;
-    top: 30%;
+    position: absolute; /* Position absolute relative to the parent container */
+    top: calc(0% + 200px); /* positioned at the top + 200px */
+    left: calc(100% + 20px); /* Positioned to the right of the parent container at all times pluss 20 px for distance */
     min-width: 150px;
     background-color: #222;
     padding: 20px;
