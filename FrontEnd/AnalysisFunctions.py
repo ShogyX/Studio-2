@@ -2,6 +2,132 @@ import re
 import json
 import csv
 
+
+def search_db_alpha(input_string, disable_leet=False):
+    
+    def contains_integers_or_special_chars(input_string):
+        # Regular expression to match integers or special characters
+        regex = re.compile(r'[0-9!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>/?]')
+        return bool(regex.search(input_string))
+
+    def convert_from_leet(input_string):
+        leetspeak_dict = {
+        'a': ['4', '@', 'A', 'a'],
+        'b': ['8', 'B', '|3', 'b', '13'],
+        'c': ['(', '[', '{', '<', 'C', 'c'],
+        'd': ['|)', '|]', 'D', 'd'],
+        'e': ['3', 'E', 'e', ],
+        'f': ['|=', 'F', 'f', 'ph'],
+        'g': ['6', '9', 'G', 'g'],
+        'h': ['#', '|-|', 'H', 'h'],
+        'i': ['1', '!', 'I', 'i'],
+        'j': ['_|', 'J', 'j'],
+        'k': ['|<', 'K', 'k'],
+        'l': ['1', '|_', 'L', 'l', '|', '7'],
+        'm': ['M', 'm'],
+        'n': ['N', 'n'],
+        'o': ['0', 'O', 'o', '<>'],
+        'p': ['|D', '|o', 'P', 'p'],
+        'q': ['Q', 'q'],
+        'r': ['|2', 'R', 'r'],
+        's': ['5', '$', 'S', 's'],
+        't': ['7', '+', 'T', 't'],
+        'u': ['|_|', 'U', 'u',],
+        'v': ['\\/', 'V', 'v'],
+        'w': ['VV', '2u''w', 'W'],
+        'x': ['%', '><', 'X', 'x'],
+        'y': ['`/', '7', '\\|/', '\\//', 'Y', 'y'],
+        'z': ['2', '7_', '>', 'z', 'Z'],
+        ' ': ['-', '_', ' '],
+        }
+        new_word = input_string
+        new_words = []
+        for letter in leetspeak_dict.keys():
+            list_of_subs = leetspeak_dict[letter]
+            for sub in list_of_subs:
+                if sub in input_string:
+                    new_word = new_word.replace(sub, letter)
+                    if new_word not in new_words:
+                        new_words.append(new_word)
+    
+        return new_word
+
+    def search_file(input_string):
+
+        
+        if contains_integers_or_special_chars(input_string) == True and disable_leet == False:
+            input_string_2 = convert_from_leet(input_string)
+        else:
+            input_string_2 = ""
+
+        rows = []
+        input_string = input_string.lower()
+
+        
+        length_input = len(input_string)
+        if length_input > 33:
+            length_input = 33
+
+
+        remaining_length = length_input
+        
+
+        while remaining_length > 3:
+            changes_made = 0
+            filename = "output/output_files/wordlist"
+            filename = filename + f"_{remaining_length}.txt"
+
+            with open(filename, 'r', encoding='utf-8') as f:
+                print(filename)
+                for row in f:
+                    row = row.strip()
+                    if row.lower() in input_string and row not in rows or row.lower() in input_string_2:
+                        rows.append(row)
+                        remaining_length -= len(row)
+                        if len(row) > remaining_length/2:
+                            break
+                        changes_made += 1
+                        
+                    # elif row.lower() in input_string_2 and row not in rows:
+                    #     rows.append(row)
+                    #     remaining_length -= len(row)
+                    #     if len(row) > remaining_length/2:
+                    #         break
+                    #     changes_made += 1
+                
+            if changes_made == 0:
+                remaining_length = 0
+
+        output_lower = rows
+        #output_lower = [[lang, word.lower(), source] for lang, word, source in output]
+        output_lower.sort(key=lambda x: len(x), reverse=True)
+        filtered_output = []
+        added_words = set()
+        for item in output_lower:
+            word = item
+            is_substring = False
+            for other_word in added_words:
+                if word.lower() in other_word.lower():
+                    is_substring = True
+                    break
+            if not is_substring:
+                filtered_output.append(item)
+                added_words.add(word)
+
+        # Convert filtered output to JSON format
+        json_output = []
+        for item in filtered_output:
+            json_output.append({
+                "word": item
+            })
+
+        # Convert the list of dictionaries to JSON
+        print(json.dumps(json_output, indent=4))
+        return json.dumps(json_output, indent=4)
+
+    #search_file(input_string)
+    return search_file(input_string)
+
 #The following function will search the password of the user against a wordlist of 11 million common words using a leet converter and the raw input.
 def contains_integers_or_special_chars(s):
     # Regular expression to match integers or special characters
@@ -142,7 +268,7 @@ def find_integer_sequences(input_string, only_occurrence=True):
     results = {}
     for sequence in integers_found:
         sequence_str = str(sequence)
-        if len(sequence_str) > 1:  # Check if sequence is longer than 1 digit
+        if len(sequence_str) > 2:  # Check if sequence is longer than 1 digit
             count = 0
             for i in range(len(sequence_str) - 1):
                 if abs(int(sequence_str[i]) - int(sequence_str[i + 1])) == 1:
@@ -490,14 +616,14 @@ def umbrellafunc (input_string):
                 #Add lacks lowercase character statement
                 password_info[Rule_Type].append("Your password lacks the inclusion of a special character")
 
-    database_results = json.loads(search_file(input_string))
+    database_results = json.loads(search_db_alpha(input_string))
     if len(database_results) > 0:
         words_found = []
-        password_info['Match in Database!'].append(f"Your password contains words that are in our database")
+        password_info['Match in Database!'].append(f"Your password contains words that are in our database: {words_found}")
         for dict in database_results:
-            language = dict["language"]
-            word_found = dict["word"]
-            word_source = dict["source"]
+            #language = dict["language"]
+            #word_found = dict["word"]
+            #word_source = dict["source"]
             words_found.append(words_found)
             issues_found += 1
             #password_info['Match in Database!'].append(f"{word_found}")

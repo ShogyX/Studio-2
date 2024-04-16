@@ -2,8 +2,6 @@ from flask import Flask, render_template, request, jsonify
 #imports functions from the local AnalysisFunctions script
 from AnalysisFunctions import umbrellafunc
 
-
-
 #Initialize the app with Flask
 app = Flask(__name__)
 
