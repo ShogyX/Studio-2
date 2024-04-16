@@ -122,7 +122,7 @@ def search_db_alpha(input_string, disable_leet=False):
             })
 
         # Convert the list of dictionaries to JSON
-        print(json.dumps(json_output, indent=4))
+        
         return json.dumps(json_output, indent=4)
 
     #search_file(input_string)
