@@ -3,7 +3,7 @@ import json
 import csv
 
 
-def search_db_alpha(input_string, disable_leet=False):
+def search_db_alpha(input_string, disable_leet=True):
     
     def contains_integers_or_special_chars(input_string):
         # Regular expression to match integers or special characters
@@ -619,13 +619,21 @@ def umbrellafunc (input_string):
     database_results = json.loads(search_db_alpha(input_string))
     if len(database_results) > 0:
         words_found = []
-        password_info['Match in Database!'].append(f"Your password contains words that are in our database: {words_found}")
-        for dict in database_results:
+
+        
+        for word in database_results:
+            print(word)
             #language = dict["language"]
             #word_found = dict["word"]
             #word_source = dict["source"]
-            words_found.append(words_found)
+            words_found.append(word["word"])
             issues_found += 1
             #password_info['Match in Database!'].append(f"{word_found}")
+
+        if len(words_found) <= 1:
+            password_info['Match in Database!'].append(f"Your password contains a word that is in our database: {words_found}")
+        else:
+            password_info['Match in Database!'].append(f"Your password contains multiple words that are in our database: {words_found}")
+
     password_info["Issues Found"] = issues_found
     return json.dumps(password_info)
