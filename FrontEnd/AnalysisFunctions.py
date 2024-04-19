@@ -569,13 +569,13 @@ def umbrellafunc (input_string):
             elif at_end == False and at_start == True:
                 issues_found += 1
                 #single instance at the start
-                password_info[Rule_Type].append(f"The only instance of a {key} in your password is at the end of the password")
+                password_info[Rule_Type].append(f"The only instance of a {key} in your password is at the start of the password")
                 
             elif at_start == True and at_end == True:
                 if input_string[0] == input_string[-1]:
                     issues_found += 1
                     #both instances of the character are at the beginning and end, and match.
-                    password_info[Rule_Type].append(f"The only two instances of a {key} in your password is at the beginning and end of the password")
+                    password_info[Rule_Type].append(f"The only two instances of a {key} in your password is at the end and end of the password")
 
     # Find issues in repeated combinations of letters, digits and or special characters.
     find_repeated_character_combinations_data = json.loads(find_repeated_character_combinations(input_string))
