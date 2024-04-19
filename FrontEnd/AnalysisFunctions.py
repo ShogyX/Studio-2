@@ -78,7 +78,7 @@ def search_db_alpha(input_string, disable_leet=True):
             filename = filename + f"_{remaining_length}.txt"
 
             with open(filename, 'r', encoding='utf-8') as f:
-                print(filename)
+                
                 for row in f:
                     row = row.strip()
                     if row.lower() in input_string and row not in rows or row.lower() in input_string_2:
@@ -99,6 +99,7 @@ def search_db_alpha(input_string, disable_leet=True):
                 remaining_length = 0
 
         output_lower = rows
+        
         #output_lower = [[lang, word.lower(), source] for lang, word, source in output]
         output_lower.sort(key=lambda x: len(x), reverse=True)
         filtered_output = []
@@ -622,7 +623,7 @@ def umbrellafunc (input_string):
 
         
         for word in database_results:
-            print(word)
+            
             #language = dict["language"]
             #word_found = dict["word"]
             #word_source = dict["source"]
