@@ -15,18 +15,18 @@ body {
     border-radius: 25px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
-    flex-direction: column; /* Stack child elements vertically */
-    align-items: left; /* Center child elements horizontally */
-    height: auto; /* Fixed height for the container */
+    flex-direction: column; 
+    align-items: left; 
+    height: auto; 
     
 }
 
 @media only screen and (max-width: 300px) {
     .container {
-        width: 70%; /* Make the container full width */
-        padding: 0px; /* Add padding to the container */
+        width: 70%; 
+        padding: 0px;
     }
-    /* Other styles for smaller screens */
+ 
 }
 h1 {
     text-align: center;
@@ -47,7 +47,7 @@ input[type="password"], input[type="text"] {
     font-size: 16px;
     background-color: #333;
     color: #eee;
-    margin-right: 10px; /* Adjusted margin-right for more space */
+    margin-right: 10px; 
 }
 
 button {
@@ -64,16 +64,16 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* Apply css properties to h1 element */
+
 h1 {
     text-align: center;
 }
 
-/* Create a container using CSS properties */
+
 .meter-container {
-    position: absolute; /* Position relative to the parent container */
-    top: 0%; /* Adjust top position as needed */
-    left: calc(100% + 20px); /* Position it to the right of the main container with some spacing */
+    position: absolute; 
+    top: 0%; 
+    left: calc(100% + 20px); /* Position it to the right of the main container with some spacing, have to use calc to ensure it does not more weird*/
     max-width: 900px;
     background-color: #222;
     padding: 20px;
@@ -93,7 +93,7 @@ h1 {
   
   .progress-circle__background {
     fill: none;
-    stroke: #ddd; /* Background color */
+    stroke: #ddd;
     stroke-width: 8;
   }
   
@@ -101,16 +101,16 @@ h1 {
     fill: none;
     stroke-width: 8;
     stroke-dasharray: 283;
-    transition: stroke-dashoffset 0.5s ease; /* Animation duration */
+    transition: stroke-dashoffset 0.5s ease; 
   }
   
   .progress-circle__text {
     font-size: 20px;
-    fill: #333; /* Text color */
+    fill: #333; 
   }
 
 .second-container {
-    position: absolute; /* Position absolute relative to the parent container */
+    position: absolute; /* Position absolute relative to the main container */
     top: calc(0% + 200px); /* positioned at the top + 200px */
     left: calc(100% + 20px); /* Positioned to the right of the parent container at all times pluss 20 px for distance */
     min-width: 150px;
@@ -128,11 +128,11 @@ h1 {
 }
 
 #input_text {
-    padding-right: 185px; /* Adjust padding to accommodate the button */
-    border-radius: 5px; /* Ensure consistent styling */
-    border: 0px solid #ccc; /* Ensure consistent styling */
-    height: 36px; /* Ensure consistent height */
-    box-sizing: border-box; /* Ensure padding and border are included in the width */
+    padding-right: 185px; 
+    border-radius: 5px; 
+    border: 0px solid #ccc; 
+    height: 36px; 
+    box-sizing: border-box;
 }
 
 .password-toggle-icon {
@@ -141,22 +141,21 @@ h1 {
     top: 51%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #555; /* Adjust the color as needed */
-    z-index: 1; /* Ensure the button is above the input field */
+    color: #555; 
+    z-index: 1; 
 }
 
 .password-toggle-icon i {
-    font-size: 18px; /* Adjust the font size as needed */
+    font-size: 18px; 
 }
 
-/* Styling for the information boxes */
 .info-box-container {
     position: relative;
-    top: 50%; /* Position below the container */
+    top: 50%; 
     left: 50%;
     transform: translateX(-50%);
-    width: 100%; /* Adjust the width as needed */
-    max-width: 760px; /* Maximum width of the container */
+    width: 100%; 
+    max-width: 760px; 
     border-radius: 15px;
 }
 
@@ -166,30 +165,30 @@ h1 {
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
-    opacity: 0; /* Initially hidden */
-    animation: slideUpFadeIn 1.2s forwards; /* Fade-in animation */
+    opacity: 0; 
+    animation: slideUpFadeIn 1.2s forwards; 
 }
 
 .info-box-title {
-    background-color: #721c24; /* Dark red */
+    background-color: #721c24; 
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 10px;
     padding: 10px;
-    border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
+    border-radius: 10px 10px 0 0; 
 }
 
 .info-box-message {
-    background-color: #ef545b; /* Light red */
+    background-color: #ef545b;
     padding: 10px;
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 5px; 
     margin-bottom: 10px;
-    line-height: 1.5; /* Increase line height for better readability */
+    line-height: 1.5; 
 }
 .info-box-message:last-child {
     margin-bottom: 0;
 }
-/* Fade-in animation keyframes */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -203,37 +202,37 @@ h1 {
 @keyframes slideUpFadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px); /* Start position below */
+        transform: translateY(20px); 
     }
     to {
         opacity: 1;
-        transform: translateY(0); /* End position at original position */
+        transform: translateY(0); 
     }
 }
 
 .placeholder-box {
     position: rela;
-    background-color: transparent; /* Example background color for placeholder */
-    color: #fff; /* Example text color for placeholder */
-    opacity: 0.7; /* Example opacity for placeholder */
-    /* Add any other styles for the placeholder box */
+    background-color: transparent; 
+    color: #fff; 
+    opacity: 0.7;
+
 }
 
 .placeholder-info-box-title {
-    background-color: #da8d19; /* Dark red */
+    background-color: #da8d19;
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 10px;
     padding: 10px;
-    border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
+    border-radius: 10px 10px 0 0; 
 }
 
 .placeholder-info-box-message {
-    background-color: #ddc53d; /* Light red */
+    background-color: #ddc53d; 
     padding: 10px;
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 5px; 
     margin-bottom: 5px;
-    line-height: 1.5; /* Increase line height for better readability */
+    line-height: 1.5; 
 }
 
 .loading-overlay {
@@ -242,25 +241,24 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-    display: none; /* Initially hidden */
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: none; 
     
 }
 
 .loader {
-    position: fixed; /* Fixed position to keep it in the same place relative to the viewport */
-    top: 35%; /* Adjust the vertical position */
-    left: 43%; /* Adjust the horizontal position */
-    transform: translate(-50%, -50%); /* Center the loader */
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
+    position: fixed; 
+    top: 35%; 
+    left: 43%; 
+    transform: translate(-50%, -50%);
+    border: 8px solid #f3f3f3; 
+    border-top: 8px solid #3498db; 
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    animation: spin 1s linear infinite; /* Spin animation */
+    animation: spin 1s linear infinite; 
 }
 
-/* Spin animation keyframes */
 @keyframes spin {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }

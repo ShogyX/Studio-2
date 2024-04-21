@@ -133,24 +133,24 @@ def search_abcs(input_string):
     matches = []
     match_length = 1
     current_match = ""
-    for i, letter in enumerate (input_string.lower()):
+    for letter_index_in_string, letter in enumerate (input_string.lower()):
         if letter.isalpha() == True:
             try:
                 index_in_alphabet = matching_string.index(letter)
-                if input_string.lower()[i+1] == matching_string[index_in_alphabet+1]:
-                    current_match += org_string[i]
+                if input_string.lower()[letter_index_in_string+1] == matching_string[index_in_alphabet+1]:
+                    current_match += org_string[letter_index_in_string]
                     match_length += 1
                 elif match_length > 2:
-                    current_match += org_string[i]
+                    current_match += org_string[letter_index_in_string]
                     matches.append(current_match)
                     match_length = 1
                     current_match = ""
                 else:
                     match_length = 1
                     current_match = ""
-            except IndexError as e:
+            except IndexError:
                 if match_length > 2:
-                    current_match += org_string[i]
+                    current_match += org_string[letter_index_in_string]
                     matches.append(current_match)
                     match_length = 1
                     current_match = ""   
@@ -162,91 +162,108 @@ def find_integer_sequences(input_string, only_occurrence=True):
     for integer in re.findall(r'\d+', input_string):
         str_integer = str(integer)
         filtered_integers.append(str_integer)
-
     results = {}
+    sequences_found_with_match = []
+    
     for sequence_str in filtered_integers:
+        if len(sequence_str) < 3:
+            continue
+        #Avoid checking stuff that is shorter than 3 since we dont care about it
         if len(sequence_str) > 2:  
-            count = 0
-            for i in range(len(sequence_str) - 1):
-                if sum(int(sequence_str[i]) - int(sequence_str[i + 1])) == 1:
+            count = 1
+            for index in range(0, len(sequence_str)):
+                #Not sure why abs works but it does, so dont fuck with it.
+                next_index = index + 1
+                try:
+                    absolute_value_of_seq_str_math = int(sequence_str[next_index]) - int(sequence_str[index])
+                except:
+                    absolute_value_of_seq_str_math = 0
+                    pass
+                
+                if absolute_value_of_seq_str_math == 1:
                     count += 1
+                elif count > 2:
+                    sequences_found_with_match.append(sequence_str)
                 else:
-                    break
-            else:  
-                start_occurrence = input_string.startswith(sequence_str)
-                end_occurrence = input_string.endswith(sequence_str)
-                if only_occurrence and len(filtered_integers) == 1:
-                    only_occurrence_flag = True
-                else:
-                    only_occurrence_flag = False
-                results[sequence_str] = {
-                    'start_occurrence': start_occurrence,
-                    'end_occurrence': end_occurrence,
-                    'only_occurrence': only_occurrence_flag
-                }
+                    
+                    count= 0
+                    continue
+        
+        for sequences_found in sequences_found_with_match:
+            start_occurrence = input_string.startswith(sequences_found)
+            end_occurrence = input_string.endswith(sequences_found)
+            if only_occurrence and len(filtered_integers) == len(sequences_found_with_match):
+                only_occurrence = True
+            else:
+                only_occurrence = False
+            results[sequence_str] = {
+                'start_occurrence': start_occurrence,
+                'end_occurrence': end_occurrence,
+                'only_occurrence': only_occurrence
+            }
 
     return json.dumps(results, indent=4)
 
 #finds integers, uppercase and special characters, and checks if they are at the end or beginning of a string and if they are the only occurence in the string.
-def find_character_positions(s):
+def find_character_positions(input_string):
     results = {}
 
-    for char_type in ['uppercase letter', 'number', 'special-character', 'lowercase letter']:
+    for char_type in ['uppercase_letter', 'number', 'special_char', 'lowercase_letter']:
         positions = []
         found_single_occurrence = False
         found_start = False
         found_end = False
         found_middle = False
         
-        for i, char in enumerate(s):
-            if char_type == 'lowercase letter' and char.islower():
-                positions.append(i)
+        for char_index, char in enumerate(input_string):
+            if char_type == 'lowercase_letter' and char.islower():
+                positions.append(char_index)
                 if len(positions) > 1:
                     found_single_occurrence = False
                 else:
                     found_single_occurrence = True
-                if i == 0:
+                if char_index == 0:
                     found_start = True
-                elif i == len(s) - 1:
+                elif char_index == len(input_string) - 1:
                     found_end = True
                 else:
                     found_middle = True  # Set found_middle to True if character is in the middle
                     
-            elif char_type == 'uppercase letter' and char.isupper():
-                positions.append(i)
+            elif char_type == 'uppercase_letter' and char.isupper():
+                positions.append(char_index)
                 if len(positions) > 1:
                     found_single_occurrence = False
                 else:
                     found_single_occurrence = True
-                if i == 0:
+                if char_index == 0:
                     found_start = True
-                elif i == len(s) - 1:
+                elif char_index == len(input_string) - 1:
                     found_end = True
                 else:
                     found_middle = True  # Set found_middle to True if character is in the middle
 
             elif char_type == 'number' and char.isdigit():
-                positions.append(i)
+                positions.append(char_index)
                 if len(positions) > 1:
                     found_single_occurrence = False
                 else:
                     found_single_occurrence = True
-                if i == 0:
+                if char_index == 0:
                     found_start = True
-                elif i == len(s) - 1:
+                elif char_index == len(input_string) - 1:
                     found_end = True
                 else:
                     found_middle = True  # Set found_middle to True if character is in the middle
 
-            elif char_type == 'special-character' and not char.isalnum():
-                positions.append(i)
+            elif char_type == 'special_char' and not char.isalnum():
+                positions.append(char_index)
                 if len(positions) > 1:
                     found_single_occurrence = False
                 else:
                     found_single_occurrence = True
-                if i == 0:
+                if char_index == 0:
                     found_start = True
-                elif i == len(s) - 1:
+                elif char_index == len(input_string) - 1:
                     found_end = True
                 else:
                     found_middle = True  # Set found_middle to True if character is in the middle
@@ -261,58 +278,44 @@ def find_character_positions(s):
     return json.dumps(results, indent=4)
 
 #finds character sequences longer than 2 in length, is case sensitive.
-def find_character_sequences(input_string, sequence_length=3, only_occurrence=True):
-    # Identify individual sequences
-    results = {}
-    i = 0
-    while i < len(input_string):
-        sequence = input_string[i]
-        j = i + 1
-        while j < len(input_string) and input_string[j] == input_string[i]:
-            sequence += input_string[j]
-            j += 1
+def find_character_sequences(input_string, sequence_length_filter=3):
+    results = []
+    sequence_holder = ""
+    for letter_index, leter in enumerate(input_string):
+        if letter_index > 0 and leter == input_string[letter_index - 1]:
+            sequence_holder += leter
+        else:
+            if len(sequence_holder) >= sequence_length_filter:
+                results.append(sequence_holder)
+            sequence_holder = leter
+    if len(sequence_holder) >= sequence_length_filter:
+        results.append(sequence_holder)
+    return results
 
-        if len(sequence) >= sequence_length:
-            start_occurrence = i == 0
-            end_occurrence = j == len(input_string)
-            if only_occurrence and input_string.count(sequence) == 1:
-                only_occurrence_flag = True
-            else:
-                only_occurrence_flag = False
-            results[sequence] = {
-                #'start_occurrence': start_occurrence,
-                #'end_occurrence': end_occurrence,
-                'only_occurrence': only_occurrence_flag
-            }
-
-        i = j
-
-    return json.dumps(results, indent=4)
 
 #Finds repeated character combinations that are equal to or longer than 4 in length for integers, letters and special characters.
-def find_repeated_character_combinations(s, min_string_length=4, min_integer_length=4, min_special_length=4):
+def find_repeated_character_combinations(input_string, min_string_length=4, min_integer_length=4, min_special_length=4):
     matches = []
-    
     # Find repeated string combinations
-    for i in range(len(s) - min_string_length + 1):
-        for j in range(i + min_string_length, len(s) + 1):
-            substring = s[i:j]
-            if len(substring) >= min_string_length and s.count(substring) > 1:
-                matches.append((substring, i == 0, j == len(s), "string"))
+    for i in range(len(input_string) - min_string_length + 1):
+        for j in range(i + min_string_length, len(input_string) + 1):
+            substring = input_string[i:j]
+            if len(substring) >= min_string_length and input_string.count(substring) > 1:
+                matches.append((substring, i == 0, j == len(input_string), "string"))
     
     # Find repeated integer combinations
-    for i in range(len(s) - min_integer_length + 1):
-        for j in range(i + min_integer_length, len(s) + 1):
-            substring = s[i:j]
-            if substring.isdigit() and len(substring) >= min_integer_length and s.count(substring) > 1:
-                matches.append((substring, i == 0, j == len(s), "integer"))
+    for i in range(len(input_string) - min_integer_length + 1):
+        for j in range(i + min_integer_length, len(input_string) + 1):
+            substring = input_string[i:j]
+            if substring.isdigit() and len(substring) >= min_integer_length and input_string.count(substring) > 1:
+                matches.append((substring, i == 0, j == len(input_string), "integer"))
     
     # Find repeated special character combinations
-    for i in range(len(s) - min_special_length + 1):
-        for j in range(i + min_special_length, len(s) + 1):
-            substring = s[i:j]
-            if not substring.isalnum() and len(substring) >= min_special_length and s.count(substring) > 1:
-                matches.append((substring, i == 0, j == len(s), "special character"))
+    for i in range(len(input_string) - min_special_length + 1):
+        for j in range(i + min_special_length, len(input_string) + 1):
+            substring = input_string[i:j]
+            if not substring.isalnum() and len(substring) >= min_special_length and input_string.count(substring) > 1:
+                matches.append((substring, i == 0, j == len(input_string), "special character"))
     
     # Sort matches by length, longest first
     matches.sort(key=lambda x: len(x[0]), reverse=True)
@@ -328,33 +331,26 @@ def find_repeated_character_combinations(s, min_string_length=4, min_integer_len
     for match, is_start, is_end, match_type in filtered_matches:
         results[match] = {
             "type": match_type,
-            "times_repeated": s.count(match)
+            "times_repeated": input_string.count(match)
         }
     
     return json.dumps(results, indent=4)
 
 #Checks for the inclusion of the different character types.
-def check_character_types(s):
-    has_lowercase_alpha = any(c.islower() for c in s)
-    has_uppercase_alpha = any(c.isupper() for c in s)
-    has_numeric = any(c.isdigit() for c in s)
-    has_special = any(not c.isalnum() for c in s)
+def check_character_types(input_string):
+    check_lowercase = any(character.islower() for character in input_string)
+    check_integer = any(charater.isdigit() for charater in input_string)
+    check_special = any(not charater.isalnum() for charater in input_string)
+    check_uppercase = any(character.isupper() for character in input_string)
 
     result = {
-        "lowercase": has_lowercase_alpha,
-        "uppercase": has_uppercase_alpha,
-        "integer": has_numeric,
-        "special": has_special
+        "lowercase": check_lowercase,
+        "uppercase": check_uppercase,
+        "integer": check_integer,
+        "special": check_special
     }
 
     return json.dumps(result, indent=4)
-
-
-def retrieve_password_fallacy(fallacy_name, json_file_path="FrontEnd/responses.json"):
-    with open(json_file_path, 'r') as file:
-        data = json.load(file)
-    
-    return data.get(fallacy_name)
 
 
 def umbrellafunc (input_string):
@@ -367,16 +363,6 @@ def umbrellafunc (input_string):
         issues_found += 1
         password_info[Rule_Type].append("Your Password is too short! We recommend more than 12 characters in length!")
         #Length is short
-
-
-    # elif len(input_string) > 8 and len(input_string) < 12:
-    #     #Length is moderate
-    #     Rule_Type = "Length Requirement!"
-    #     issues_found += 1
-    #     password_info[Rule_Type].append("Your Password is above the minimum requirement, but would benefit from being above 12 characters long!")
-        
-
-    #find abcs
 
     abcs_found = search_abcs(input_string)
     for combination in abcs_found:
@@ -427,23 +413,18 @@ def umbrellafunc (input_string):
             # found sequential combination of integers in password
 
     # Find grouped character repetitions
-    find_character_sequences_json = find_character_sequences(input_string)
-    find_character_sequences_data = json.loads(find_character_sequences_json)
-
+    find_character_sequences_data = find_character_sequences(input_string)
+    values_found = []
     
-    for key, value in find_character_sequences_data.items():
-        Rule_Type = "Repeated Letter Sequence!"
-        if len(key) > 2:
-            only_instance = value["only_occurrence"]
-        character_repetitions_found.append(key)
-
-        if only_instance == True:
-            password_info[Rule_Type].append("You have included a sequence of repeated letters in your password!")
-            issues_found += 1
-        else:
-            #Multiple instances of repeated characters.
-            issues_found += 1
-            password_info[Rule_Type].append("You have included multiple sequences of repeated letters in your password!")
+    Rule_Type = "Repeated Letter Sequence!"
+    
+    if len(find_character_sequences_data) == 1:
+        password_info[Rule_Type].append(f"You have included the sequence {find_character_sequences_data} of repeated letters in your password!")
+        issues_found += 1
+    elif len(find_character_sequences_data) > 1:
+        #Multiple instances of repeated characters.
+        issues_found += 1
+        password_info[Rule_Type].append(f"You have included the following repeated letters in your password: {find_character_sequences_data}")
 
     # Find issues in character placement and occurences
     find_character_positions_json = find_character_positions(input_string)
@@ -512,25 +493,28 @@ def umbrellafunc (input_string):
                 issues_found += 1
                 #Add lacks lowercase character statement
                 password_info[Rule_Type].append("Your password lacks the inclusion of a special character")
+    try:
+        database_results = json.loads(search_db_alpha(input_string))
 
-    database_results = json.loads(search_db_alpha(input_string))
-    if len(database_results) > 0:
-        words_found = []
-
-        
-        for word in database_results:
+        if len(database_results) > 0:
+            words_found = []
             
-            #language = dict["language"]
-            #word_found = dict["word"]
-            #word_source = dict["source"]
-            words_found.append(word["word"])
-            issues_found += 1
-            #password_info['Match in Database!'].append(f"{word_found}")
+            for word in database_results:
+                
+                #language = dict["language"]
+                #word_found = dict["word"]
+                #word_source = dict["source"]
+                words_found.append(word["word"])
+                issues_found += 1
+                #password_info['Match in Database!'].append(f"{word_found}")
 
-        if len(words_found) <= 1:
-            password_info['Match in Database!'].append(f"Your password contains a word that is in our database: {words_found}")
-        else:
-            password_info['Match in Database!'].append(f"Your password contains multiple words that are in our database: {words_found}")
+            if len(words_found) <= 1:
+                password_info['Match in Database!'].append(f"Your password contains a word that is in our database: {words_found}")
+            else:
+                password_info['Match in Database!'].append(f"Your password contains multiple words that are in our database: {words_found}")
+    except FileNotFoundError:
+        pass
+        #Added this to avoid the psm not working when there are no wordlist files. 
 
     password_info["Issues Found"] = issues_found
     return json.dumps(password_info)

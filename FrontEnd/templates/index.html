@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"><!-- Include this to make sure certain icons render properly -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- This grabs the CSS stylesheet from the Static folder -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- This grabs the stylesheet that is in the static folder -->
     <title>Password Strength Meter 3000</title>
 </head>
 
@@ -98,24 +98,6 @@
             specialDiv.style.color = specialRegex.test(password) ? 'green' : 'red';
         }
 
-        document.getElementById("input_text").addEventListener("keyup", function(event) {
-            // Check if the Enter key (key code 13) is pressed
-            if (event.keyCode === 13) {
-                // Prevent the default action of the Enter key (form submission)
-                event.preventDefault();
-                // Call the analyzePassword() function
-                analyzePassword();
-            }
-        });
-
-        function cleanInput(input) {
-            // Regular expression to match any escaped characters
-            var escapedRegex = /\\[0-9A-Fa-f]{1,2}/g;
-        
-            // Replace escaped characters with an empty string
-            return input.replace(escapedRegex, '');
-        }
-
         function setProgress(percent) {
         const circle = document.querySelector('.progress-circle__progress');
         const text = document.querySelector('.progress-circle__text');
@@ -123,7 +105,7 @@
         const circumference = 2 * Math.PI * radius;
         const offset = circumference - (percent / 100) * circumference;
         circle.style.strokeDashoffset = offset;
-        // Set color based on progress
+        
         const color = getColor(percent);
         circle.style.stroke = color;
         text.textContent = percent + '%';
@@ -131,15 +113,15 @@
         }
 
         function getColor(percent) {
-        // Define color intervals
+        
         const colorIntervals = [
-            { start: 0, end: 25, color: '#FF4500' }, // Red
-            { start: 25, end: 50, color: '#FFA500' }, // Orange
-            { start: 50, end: 75, color: '#FFFF00' }, // Yellow
-            { start: 75, end: 100, color: '#32CD32' } // Green
+            { start: 0, end: 25, color: '#FF4500' }, 
+            { start: 25, end: 50, color: '#FFA500' },
+            { start: 50, end: 75, color: '#FFFF00' }, 
+            { start: 75, end: 100, color: '#32CD32' } 
         ];
 
-        // Find the color interval for the given percentage
+        
         for (const interval of colorIntervals) {
             if (percent >= interval.start && percent <= interval.end) {
             return interval.color;
@@ -151,14 +133,14 @@
             var infoBoxContainer = document.getElementById('info-box-container');
             var loader = document.querySelector('.loader');
 
-            // Calculate the position of the loader
+            
             var containerRect = infoBoxContainer.getBoundingClientRect();
             var loaderWidth = loader.offsetWidth;
             var loaderHeight = loader.offsetHeight;
             var loaderTop = containerRect.top + (containerRect.height / 2) - (loaderHeight / 2);
             var loaderLeft = containerRect.left + (containerRect.width / 2) - (loaderWidth / 2);
 
-            // Set the position of the loader
+            
             loader.style.top = loaderTop + 'px';
             loader.style.left = loaderLeft + 'px';
         }
@@ -198,26 +180,26 @@
 
         function createInfoBoxes(data) {
             var container = document.getElementById('info-box-container');
-            // Hide the placeholder box
+            
             var placeholderBox = document.getElementById('placeholder-box');
             placeholderBox.style.display = 'none'
-            // Loop through each key in the JSON
+            
             for (var key in data) {
                 
                 if (key !== 'Issues Found') {
                     var messages = data[key];
                     if (messages.length > 0) {
-                        // Create information box
+                        
                         var infoBox = document.createElement('div');
                         infoBox.classList.add('info-box');
 
-                        // Set title
+                       
                         var title = document.createElement('div');
                         title.classList.add('info-box-title');
                         title.textContent = key;
                         infoBox.appendChild(title);
 
-                        // Set messages
+                        
                         messages.forEach(function(message) {
                             var messageElement = document.createElement('div');
                             messageElement.classList.add('info-box-message');
@@ -225,46 +207,46 @@
                             infoBox.appendChild(messageElement);
                         });
 
-                        // Append information box to container
+                       
                         container.appendChild(infoBox);
 
                     }
                 }
                 if (key === 'Issues Found') {
-                    var issuesFound = data[key]; // Assuming 'issuesFound' is the variable to store the number of issues found
+                    var issuesFound = data[key]; 
                     if (issuesFound === 0) {
                         setProgress(100);
-                        // Create an information box
+                        
                         var infoBox = document.createElement('div');
                         infoBox.classList.add('info-box');
 
-                        // Set title
+                        
                         var title = document.createElement('div');
                         title.classList.add('info-box-title');
                         title.textContent = 'No issues found';
                         infoBox.appendChild(title);
 
-                        // Create a message box
+                        
                         var messageBox = document.createElement('div');
                         messageBox.classList.add('info-box-message');
                         messageBox.textContent = 'Congratulations! We cant find any common fallacies in your password. We still recommend testing the password on other PSM sites to ensure the password is strong enough';
                         infoBox.appendChild(messageBox);
 
-                        // Append information box to regular container
+                        
                         var container = document.getElementById('info-box-container');
                         container.appendChild(infoBox);
                         
-                        // Hide the placeholder box
+                        
                         var placeholderBox = document.getElementById('placeholder-box');
                         placeholderBox.style.display = 'none';
 
-                        // Change the color of the info box elements
+                        
                         
                         var infoBoxTitle = document.querySelector('.info-box-title');
-                        infoBoxTitle.style.backgroundColor = '#32CD32'; // Green background color
+                        infoBoxTitle.style.backgroundColor = '#32CD32'; 
 
                         var infoBoxMessage = document.querySelector('.info-box-message');
-                        infoBoxMessage.style.backgroundColor = '#5CCD6F'; // Light green background color
+                        infoBoxMessage.style.backgroundColor = '#5CCD6F'; 
 
 
                     } else if (issuesFound === 1) {
@@ -282,7 +264,7 @@
                     }
                 }
             }
-            // Show the info box container
+            
             container.style.display = 'block';
 
             

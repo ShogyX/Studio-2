@@ -15,12 +15,11 @@ def index():
 @app.route('/analyze', methods=['POST'])
 def analyze():
     if request.method == 'POST':
-        password = request.form['input_text']
-        analysis_result = umbrellafunc(password)
+        user_input = request.form['input_text']
+        algo_return = umbrellafunc(user_input)
         #time.sleep(2)
-        return analysis_result
-
-
+        return algo_return
+    
 #Actually run the app, run with host=0.0.0.0 if you want the app to be visible on local network. 
 #this is needed if you want to port forward and allow external access to the site, default port it 5000
 if __name__ == '__main__':
