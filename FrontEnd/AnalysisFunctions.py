@@ -2,16 +2,21 @@ import re
 import json
 import csv
 
+#use input_string for all arugments that will refrence the password input as this make it easier to know what the 
 
 def search_db_alpha(input_string, disable_leet=True):
     
-    def contains_integers_or_special_chars(input_string):
-        # Regular expression to match integers or special characters
-        regex = re.compile(r'[0-9!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>/?]')
-        return bool(regex.search(input_string))
+    def check_for_int_or_spec_char(input_string):
+        # I swear this works but i have no idea why, REGEX can just fuck off
+        regex_filter = re.compile(r'[0-9!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>/?]')
+        if regex_filter.search(input_string) == True:
+            return True
+        else:
+            return False
 
-    def convert_from_leet(input_string):
-        leetspeak_dict = {
+    def convert_leet_to_letter(input_string):
+        #This leet dict is currently to big and will probably generate a lot of false positives given any sort of special character inclusion
+        leet_dict = {
         'a': ['4', '@', 'A', 'a'],
         'b': ['8', 'B', '|3', 'b', '13'],
         'c': ['(', '[', '{', '<', 'C', 'c'],
@@ -42,25 +47,22 @@ def search_db_alpha(input_string, disable_leet=True):
         }
         new_word = input_string
         new_words = []
-        for letter in leetspeak_dict.keys():
-            list_of_subs = leetspeak_dict[letter]
-            for sub in list_of_subs:
-                if sub in input_string:
-                    new_word = new_word.replace(sub, letter)
-                    if new_word not in new_words:
-                        new_words.append(new_word)
-    
+        for letter in leet_dict.keys():
+            list_of_subsetut = leet_dict[letter]
+            for substetut in list_of_subsetut:
+                if substetut in input_string and new_word not in new_words:
+                    new_word = new_word.replace(substetut, letter)
         return new_word
 
-    def search_file(input_string):
+    def search_for_word_match(input_string):
 
         
-        if contains_integers_or_special_chars(input_string) == True and disable_leet == False:
-            input_string_2 = convert_from_leet(input_string)
+        if check_for_int_or_spec_char(input_string) == True and disable_leet == False:
+            input_string_2 = convert_leet_to_letter(input_string)
         else:
             input_string_2 = ""
 
-        rows = []
+        words = []
         input_string = input_string.lower()
 
         
@@ -77,14 +79,15 @@ def search_db_alpha(input_string, disable_leet=True):
             filename = "output/output_files/wordlist"
             filename = filename + f"_{remaining_length}.txt"
 
-            with open(filename, 'r', encoding='utf-8') as f:
+            with open(filename, 'r', encoding='utf-8') as wordlist:
                 
-                for row in f:
-                    row = row.strip()
-                    if row.lower() in input_string and row not in rows or row.lower() in input_string_2:
-                        rows.append(row)
-                        remaining_length -= len(row)
-                        if len(row) > remaining_length/2:
+                for word in wordlist:
+                    word = word.strip()
+                    
+                    if word.lower() in input_string and word not in words or word.lower() in input_string_2:
+                        words.append(word)
+                        remaining_length -= len(word)
+                        if len(word) > remaining_length/2:
                             break
                         changes_made += 1
                         
@@ -98,132 +101,30 @@ def search_db_alpha(input_string, disable_leet=True):
             if changes_made == 0:
                 remaining_length = 0
 
-        output_lower = rows
         
-        #output_lower = [[lang, word.lower(), source] for lang, word, source in output]
-        output_lower.sort(key=lambda x: len(x), reverse=True)
+       
+        words.sort(key=lambda x: len(x), reverse=True)
         filtered_output = []
         added_words = set()
-        for item in output_lower:
-            word = item
+        for word in words:
             is_substring = False
             for other_word in added_words:
                 if word.lower() in other_word.lower():
                     is_substring = True
                     break
             if not is_substring:
-                filtered_output.append(item)
+                filtered_output.append(word)
                 added_words.add(word)
 
-        # Convert filtered output to JSON format
+        
         json_output = []
         for item in filtered_output:
             json_output.append({
                 "word": item
             })
-
-        # Convert the list of dictionaries to JSON
-        
         return json.dumps(json_output, indent=4)
 
-    #search_file(input_string)
-    return search_file(input_string)
-
-#The following function will search the password of the user against a wordlist of 11 million common words using a leet converter and the raw input.
-def contains_integers_or_special_chars(s):
-    # Regular expression to match integers or special characters
-    regex = re.compile(r'[0-9!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>/?]')
-    return bool(regex.search(s))
-
-def convert_from_leet(input_string):
-    leetspeak_dict = {
-    'a': ['4', '@', 'A', 'a', '/\\', '/-\\'],
-    'b': ['8', 'B', '|3', 'b', '13', '!3', '6', 'I3', '!3', '/3'],
-    'c': ['(', '[', '{', '<', 'C', 'c'],
-    'd': ['|)', '|]', 'D', 'd', 'cl', 'cI', 'I)', 'I]'],
-    'e': ['3', 'E', 'e', '[-'],
-    'f': ['|=', 'F', 'f', '/=', 'I=', 'ph'],
-    'g': ['6', '9', 'G', 'g', '(_-', '(_+', 'C-', '[,'],
-    'h': ['#', '|-|', 'H', 'h', '|~|', 'I-I', 'I~I', ']-[', ']~[', '}{', ')-(', '(-)', ')~(', '(~)'],
-    'i': ['1', '!', '|', 'I', 'i', '[]'],
-    'j': ['_|', 'J', 'j'],
-    'k': ['|<', 'K', 'k', '|c', 'Ic', '|{', '|('],
-    'l': ['1', '|_', 'L', 'l', '|', '7'],
-    'm': ['|\\/|', 'M', 'm'],
-    'n': ['|\\|', 'N', 'n'],
-    'o': ['0', 'O', 'o', '<>'],
-    'p': ['|D', '|o', 'P', 'p'],
-    'q': ['(,)', 'Q', 'q'],
-    'r': ['|2', 'R', 'r'],
-    's': ['5', '$', 'S', 's'],
-    't': ['7', '+', 'T', 't', '-|-', '~|~'],
-    'u': ['|_|', 'U', 'u', '(_)', 'L|'],
-    'v': ['\\/', 'V', 'v'],
-    'w': ['\\/\\/', 'VV', '\\N', '\'//', '\\\'', '\\^/', '(n)', '\\V/', '\\X/', '\\|/', '\\_|_/', '\\_:_/', 'uu', '2u', '\\\\//\\\\//', 'w', 'W'],
-    'x': ['%', '><', 'X', 'x'],
-    'y': ['`/', '7', '\\|/', '\\//', 'Y', 'y'],
-    'z': ['2', '7_', '-/_', '%', '>', '~/_', '-\\_', '-|_', 'z', 'Z'],
-    ' ': ['-', '_', ' '],
-    }
-    new_word = input_string
-    new_words = []
-    for letter in leetspeak_dict.keys():
-        list_of_subs = leetspeak_dict[letter]
-        for sub in list_of_subs:
-            if sub in input_string:
-                new_word = new_word.replace(sub, letter)
-                if new_word not in new_words:
-                    new_words.append(new_word)
-    
-    return new_word
-
-def search_file(search_term, filename='FrontEnd/all_words.txt'):
-
-    if contains_integers_or_special_chars(search_term) == True:
-        search_term_2 = convert_from_leet(search_term)
-    else:
-        search_term_2 = ""
-
-    rows = []
-    search_term = search_term.lower()
-    with open(filename, 'r', encoding='utf-8') as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            if row[1].lower() in search_term:
-                rows.append(row)
-                #print(row)
-            elif row[1].lower() in search_term_2:
-                row[2] = "Leet Match"
-                rows.append(row)
-
-
-    output = rows
-    output_lower = [[lang, word.lower(), source] for lang, word, source in output]
-    output_lower.sort(key=lambda x: len(x[1]), reverse=True)
-    filtered_output = []
-    added_words = set()
-    for item in output_lower:
-        word = item[1]
-        is_substring = False
-        for other_word in added_words:
-            if word in other_word:
-                is_substring = True
-                break
-        if not is_substring:
-            filtered_output.append(item)
-            added_words.add(word)
-
-    # Convert filtered output to JSON format
-    json_output = []
-    for item in filtered_output:
-        json_output.append({
-            "language": item[0],
-            "word": item[1],
-            "source": item[2]
-        })
-
-    # Convert the list of dictionaries to JSON
-    return json.dumps(json_output, indent=4)
+    return search_for_word_match(input_string)
 
 #this will search for combinations of letters in alphabetical order longer than 2
 def search_abcs(input_string):
@@ -239,47 +140,42 @@ def search_abcs(input_string):
                 if input_string.lower()[i+1] == matching_string[index_in_alphabet+1]:
                     current_match += org_string[i]
                     match_length += 1
-
                 elif match_length > 2:
                     current_match += org_string[i]
                     matches.append(current_match)
                     match_length = 1
                     current_match = ""
-
                 else:
                     match_length = 1
                     current_match = ""
-
             except IndexError as e:
                 if match_length > 2:
                     current_match += org_string[i]
                     matches.append(current_match)
                     match_length = 1
                     current_match = ""   
-
-
     return matches
 
 #finds integer sequences and checks if they are at the end or beginning of a string and if they are the only occurence of integers in the string.
 def find_integer_sequences(input_string, only_occurrence=True):
-    # Find all instances of integers in the input string
-    integers_found = [int(x) for x in re.findall(r'\d+', input_string)]
-    
-    # Identify individual sequences
+    filtered_integers = []
+    for integer in re.findall(r'\d+', input_string):
+        str_integer = str(integer)
+        filtered_integers.append(str_integer)
+
     results = {}
-    for sequence in integers_found:
-        sequence_str = str(sequence)
-        if len(sequence_str) > 2:  # Check if sequence is longer than 1 digit
+    for sequence_str in filtered_integers:
+        if len(sequence_str) > 2:  
             count = 0
             for i in range(len(sequence_str) - 1):
-                if abs(int(sequence_str[i]) - int(sequence_str[i + 1])) == 1:
+                if sum(int(sequence_str[i]) - int(sequence_str[i + 1])) == 1:
                     count += 1
                 else:
                     break
-            else:  # If loop completes without breaking, it's a valid sequence
+            else:  
                 start_occurrence = input_string.startswith(sequence_str)
                 end_occurrence = input_string.endswith(sequence_str)
-                if only_occurrence and len(integers_found) == 1:
+                if only_occurrence and len(filtered_integers) == 1:
                     only_occurrence_flag = True
                 else:
                     only_occurrence_flag = False
