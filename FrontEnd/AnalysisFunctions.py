@@ -1,6 +1,5 @@
 import re
 import json
-import csv
 
 #use input_string for all arugments that will refrence the password input as this make it easier to know what the 
 
@@ -375,7 +374,6 @@ def umbrellafunc (input_string):
     integer_sequences_json = find_integer_sequences(input_string)
     integer_sequences_data = json.loads(integer_sequences_json)
     integer_sequences_found = []
-    character_repetitions_found = []
 
     for key, value in integer_sequences_data.items():
         Rule_Type = "Common Sequence of Numbers!"
@@ -414,7 +412,6 @@ def umbrellafunc (input_string):
 
     # Find grouped character repetitions
     find_character_sequences_data = find_character_sequences(input_string)
-    values_found = []
     
     Rule_Type = "Repeated Letter Sequence!"
     
@@ -457,7 +454,7 @@ def umbrellafunc (input_string):
 
     # Find issues in repeated combinations of letters, digits and or special characters.
     find_repeated_character_combinations_data = json.loads(find_repeated_character_combinations(input_string))
-    statements = []
+    
     for key, value in find_repeated_character_combinations_data.items():
         Rule_Type = "Repeated Combinations!"
         combination = key
@@ -514,6 +511,7 @@ def umbrellafunc (input_string):
                 password_info['Match in Database!'].append(f"Your password contains multiple words that are in our database: {words_found}")
     except FileNotFoundError:
         pass
+        print("The algorithm did not fint the wordlist files! Skipped this operation! See line 493 in anaylisis functions to start debug")
         #Added this to avoid the psm not working when there are no wordlist files. 
 
     password_info["Issues Found"] = issues_found
