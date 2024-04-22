@@ -291,7 +291,6 @@ def find_character_sequences(input_string, sequence_length_filter=3):
         results.append(sequence_holder)
     return results
 
-
 #Finds repeated character combinations that are equal to or longer than 4 in length for integers, letters and special characters.
 def find_repeated_character_combinations(input_string, min_length_of_combination=4,):
     matches = []
