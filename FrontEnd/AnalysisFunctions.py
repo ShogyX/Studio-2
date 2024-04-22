@@ -293,50 +293,36 @@ def find_character_sequences(input_string, sequence_length_filter=3):
 
 
 #Finds repeated character combinations that are equal to or longer than 4 in length for integers, letters and special characters.
-def find_repeated_character_combinations(input_string, min_string_length=4, min_integer_length=4, min_special_length=4):
+def find_repeated_character_combinations(input_string, min_length_of_combination=4,):
     matches = []
-    # Find repeated string combinations
-    for i in range(len(input_string) - min_string_length + 1):
-        for j in range(i + min_string_length, len(input_string) + 1):
-            substring = input_string[i:j]
-            if len(substring) >= min_string_length and input_string.count(substring) > 1:
-                matches.append((substring, i == 0, j == len(input_string), "string"))
-    
-    # Find repeated integer combinations
-    for i in range(len(input_string) - min_integer_length + 1):
-        for j in range(i + min_integer_length, len(input_string) + 1):
-            substring = input_string[i:j]
-            if substring.isdigit() and len(substring) >= min_integer_length and input_string.count(substring) > 1:
-                matches.append((substring, i == 0, j == len(input_string), "integer"))
-    
-    # Find repeated special character combinations
-    for i in range(len(input_string) - min_special_length + 1):
-        for j in range(i + min_special_length, len(input_string) + 1):
-            substring = input_string[i:j]
-            if not substring.isalnum() and len(substring) >= min_special_length and input_string.count(substring) > 1:
-                matches.append((substring, i == 0, j == len(input_string), "special character"))
-    
-    # Sort matches by length, longest first
-    matches.sort(key=lambda x: len(x[0]), reverse=True)
-    
-    # Filter out shorter matches that are subsumed by longer ones
-    filtered_matches = []
-    for match, is_start, is_end, match_type in matches:
-        if not any(match in longer_match for longer_match, _, _, _ in filtered_matches):
-            filtered_matches.append((match, is_start, is_end, match_type))
-    
+    inp_string_len = len(input_string)
+    left_index_search_field = inp_string_len - min_length_of_combination +1
+    for left_index in range(0, left_index_search_field):
+        for right_index in range(left_index, inp_string_len +1):
+            substring = input_string[left_index-1:right_index]
+            if len(substring) >= min_length_of_combination and input_string.count(substring) > 1:
+                matches.append(substring)
+    matches_dup = matches
+    for match in matches_dup:
+        for other_match in matches_dup:
+            try:
+                if match in other_match and match != other_match:
+                    matches.remove(match)
+                elif other_match in match and match != other_match:
+                    matches.remove(other_match)
+            except ValueError:
+                pass
     # Prepare results in JSON format
     results = {}
-    for match, is_start, is_end, match_type in filtered_matches:
+    for match in matches:
         results[match] = {
-            "type": match_type,
-            "times_repeated": input_string.count(match)
+            "times_repeated": input_string.count(str(match))
         }
-    
     return json.dumps(results, indent=4)
 
 #Checks for the inclusion of the different character types.
 def check_character_types(input_string):
+    
     check_lowercase = any(character.islower() for character in input_string)
     check_integer = any(charater.isdigit() for charater in input_string)
     check_special = any(not charater.isalnum() for charater in input_string)
@@ -458,8 +444,9 @@ def umbrellafunc (input_string):
     for key, value in find_repeated_character_combinations_data.items():
         Rule_Type = "Repeated Combinations!"
         combination = key
-        type = value["type"]
+        
         times_repeated = value["times_repeated"]
+        
         if times_repeated > 1:
             issues_found += 1
             #Configure a statement to take in the combination and the times it was repeated. like
